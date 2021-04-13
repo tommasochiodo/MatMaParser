@@ -1,8 +1,0 @@
-DTWP_Male_1_Pestle_1: Dorsalis: ND (N/A)
-DTWP_Male_1_Pestle_2: Dorsalis: ND (N/A)
-DTWP_Male_1_Pestle_3: Dorsalis: ND (N/A)
-DTWP_Male_1_Pestle_4: Dorsalis: GSS Male (N/A)
-DTWP_Male_1_Pestle_5: Dorsalis: ND (N/A)
-DTWP_Male_1_Pestle_6: Dorsalis: ND (N/A)
-DTWP_Male_1_Pestle_7: Dorsalis: ND (N/A)
-DTWP_Male_1_Pestle_8: Dorsalis: ND (N/A)
