@@ -1,0 +1,39 @@
+[Tube 1]
+sampleID=DTWP_Male_14_Pestle_1
+Wild Fly=174
+GSS Female=929
+
+[Tube 2]
+sampleID=DTWP_Male_14_Pestle_2
+Wild Fly=279
+GSS Female=1077
+
+[Tube 3]
+sampleID=DTWP_Male_14_Pestle_3
+Wild Fly=19
+GSS Female=22
+
+[Tube 4]
+sampleID=DTWP_Male_14_Pestle_4
+Wild Fly=673
+GSS Female=1635
+
+[Tube 5]
+sampleID=DTWP_Male_14_Pestle_5
+Wild Fly=205
+GSS Female=1127
+
+[Tube 6]
+sampleID=DTWP_Male_14_Pestle_6
+Wild Fly=1
+GSS Female=20
+
+[Tube 7]
+sampleID=DTWP_Male_14_Pestle_7
+Wild Fly=19
+GSS Female=13
+
+[Tube 8]
+sampleID=DTWP_Male_14_Pestle_8
+Wild Fly=783
+GSS Female=1852

@@ -1,0 +1,9 @@
+SAMPLE_ID,PREMISE_ID,DESCRIPTION,TESTED,TEST,ASSAY,GENOTYPE,SIMILARITY,SCORE,FLAGGED
+DTWP_Male_1_Pestle_8,"","","2021-01-07 10:36:33",Dorsalis,Dorsalis,ND,N/A,N/A,0
+DTWP_Male_1_Pestle_7,"","","2021-01-07 10:36:33",Dorsalis,Dorsalis,ND,N/A,N/A,0
+DTWP_Male_1_Pestle_6,"","","2021-01-07 10:36:33",Dorsalis,Dorsalis,ND,N/A,N/A,0
+DTWP_Male_1_Pestle_5,"","","2021-01-07 10:36:33",Dorsalis,Dorsalis,ND,N/A,N/A,0
+DTWP_Male_1_Pestle_4,"","","2021-01-07 10:36:33",Dorsalis,Dorsalis,"GSS Male",0.518441,N/A,0
+DTWP_Male_1_Pestle_3,"","","2021-01-07 10:36:33",Dorsalis,Dorsalis,ND,N/A,N/A,0
+DTWP_Male_1_Pestle_2,"","","2021-01-07 10:36:33",Dorsalis,Dorsalis,ND,N/A,N/A,0
+DTWP_Male_1_Pestle_1,"","","2021-01-07 10:36:33",Dorsalis,Dorsalis,ND,N/A,N/A,0

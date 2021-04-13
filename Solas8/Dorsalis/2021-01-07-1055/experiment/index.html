@@ -1,0 +1,3396 @@
+<!DOCTYPE html>
+<script id="isLive">
+document.getElementById("isLive").innerHTML = "var notLive=true;"; // burn before running
+var notLive = false;
+</script>
+<title>Solas results</title>
+<meta charset="utf-8">
+<meta name="viewport"  content="width=device-width, initial-scale=0.75">
+<link rel="icon"       href="../../../.butterfly-1.png" type="image/png">
+<style>
+@media print {
+/* * { border: 1px solid black; } */
+img.center { display: none !important; }
+svg { width: 100% !important; height: 90% !important; }
+#isLive { display: none !important; }
+html, body { width: 100% !important; height: 95% !important; overflow: hidden !important; }
+body { background-color: white !important; };
+#navbar { position: absolute; width: auto !important; margin-left: 5%;}
+#navbar ul { width: auto !important; }
+.dot0 { font-size: 9pt !important; padding-left: 0px !important; }
+.dot0 .checkmark { display: none !important; }
+#chart  {
+    position: absolute !important;
+    width: 90% !important;
+    height: 90% !important;
+    top: auto !important;
+    overflow: hidden;
+}
+#legend {
+    position: absolute !important;
+    top: auto !important;
+    bottom: 10px;
+    box-shadow: none !important;
+    background-color: rgba(250,250,250,.75) !important;
+}
+#scroll { overflow: initial !important; max-height: initial !important; }
+#dnext  { display: none !important; }
+#d0     { display: none !important; }
+.axis path, .axis line { stroke: black !important; }
+pre b { color: black; }
+#score  { display: none; position: absolute !important; right: 0px; }
+#printscore  { display: none; position: absolute !important; font-size: 16px !important; left: 11ex; top: 11ex; }
+svg line { stroke: black; stroke-width: 1px; display: none; }
+#dd1, #dd2, #dd3, #dd4, #dd5, #dd6, #dd7, #dd8 { display: none !important; }
+.tooltip { opacity: 0.0 !important; }
+.tooltipexact { color: black !important; opacity: 1.0 !important; display: none; }
+/*svg g g:hover circle { stroke-width: 1px !important; }*/
+#butterfly { display: none; }
+.dot1 input ~ .checkmark:before { position: relative; top: -2px; font-size: 18px; content: "\2588"; color: #2952ff; }
+.dot2 input ~ .checkmark:before { position: relative; top: -2px; font-size: 18px; content: "\2588"; color: #2fb06e; }
+.dot3 input ~ .checkmark:before { position: relative; top: -2px; font-size: 18px; content: "\2588"; color: #de4949; }
+.dot4 input ~ .checkmark:before { position: relative; top: -2px; font-size: 18px; content: "\2588"; color: #533464; }
+} /*@media print*/
+
+body {
+    background-color: white;
+    font     : 12pt sans-serif;
+    padding  : 0;
+    margin   : 0;
+    width    : 95%;
+    height   : 95%;
+    overflow : hidden;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+img.center {
+    display: block;
+    position: absolute;
+    margin: auto;
+    height: auto;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+#chart {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: 100%;
+    margin-top: 40px;
+}
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 0%;
+    vertical-align: top;
+}
+.svg-content {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.svg-container text { font-size: 10pt; }
+.tooltip {
+    pointer-events   : none;
+    position         : absolute;
+    z-index: 3;
+    /* border : 1px;   */
+    /* height : 32px;  */
+    /* width  : 150px; */
+}
+.tooltip .tooltiptext {
+    white-space: nowrap;
+    background-color : black;
+    color: #fff;
+    text-align: center;
+    padding: 10px 10px;
+    border-radius: 12px 12px 0px 12px;
+    position: relative;
+    top: -26px;
+    right: 100%;
+    z-index: 3;
+    border: 1px solid white;
+/*    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+}
+.tooltip .tooltiptext.right {
+    position: relative;
+    right: 0px;
+    left: 5px;
+    top: 15px;
+    border-radius: 0px 12px 12px 12px;
+}
+.tooltipexact circle { color: black; stroke: white; }
+
+container {
+    width  : 80% ;
+    height : 80% ;
+}
+.axis {
+    font-size: 16px;
+    font-weight:500;
+}
+@media screen {
+.axis text {
+    fill: black;
+}
+svg line { stroke: black; stroke-width: 1px; }
+}
+.axis path, .axis line {
+    fill   : none;
+    stroke : black;
+    /* shape-rendering : crispEdges; */
+}
+.legend rect {
+    fill:white;
+    stroke:black;
+    opacity:0.8;
+}
+#legend {
+    display: inline-block;
+    position: fixed;
+    top: 200px;
+    left: 60px;
+    margin-top: 0%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: rgba(250,250,250,.75);
+    z-index: 1;
+}
+#scroll {
+    padding-left: 20px;
+    overflow: auto;
+    padding-right: 20px;
+    max-height: 300px;
+}
+#butterfly {
+    cursor: pointer;
+}
+/* Customize the label (the container) */
+.cb-container {
+    display: block;
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 10pt;
+    margin-left: 4px;
+}
+
+.noselect {
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -ms-user-select: none; /* IE10+ */
+    user-select: none; /* CSS standard */
+}
+/* Hide the browser's default checkbox */
+.cb-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 12px;
+    width: 12px;
+    background-color: #eee;
+}
+/* On mouse-over, add a grey background color */
+.cb-container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+/* When the checkbox is checked, add a background color */
+/*.dot1 input:checked ~ .checkmark { background-color: #2952ff; } /* 41  82 255  #2952ff blue  */
+/*.dot2 input:checked ~ .checkmark { background-color: #2fb06e; } /* 47 176 110  #2fb06e green */
+/*.dot3 input:checked ~ .checkmark { background-color: #de4949; } /*222  73  73  #de4949 red   */
+/*.dot4 input:checked ~ .checkmark { background-color: #533464; } /* 83  51 100  #533464 purple*/
+.dot1 input ~ .checkmark { background-color: #2952ff; } /* 41  82 255  #2952ff blue  */
+.dot2 input ~ .checkmark { background-color: #2fb06e; } /* 47 176 110  #2fb06e green */
+.dot3 input ~ .checkmark { background-color: #de4949; } /*222  73  73  #de4949 red   */
+.dot4 input ~ .checkmark { background-color: #533464; } /* 83  51 100  #533464 purple*/
+
+.dot0 { margin-bottom: 0px; font-size: inherit; }
+.dot0 .checkmark { width: 16px; height: 16px; }
+.dot0 input:checked ~ .checkmark { background-color: #fff; }
+.dot0 input ~ .checkmark { background-color: #fff; }
+
+.dot0 input { display: none; } /* fix shifting checkbox on click on android */
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+/* Show the checkmark when checked */
+.cb-container input:checked ~ .checkmark:after {
+    display: block;
+}
+/* Style the checkmark/indicator */
+.cb-container .checkmark:after {
+    left: 4px;
+    top: 1px;
+    width: 3px;
+    height: 6px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.dot0 .checkmark:after {
+    left: 5px;
+    top: 2px;
+    width: 3px;
+    height: 8px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+}
+#navbar {
+    z-index: 2;
+    width: 100%;
+}
+
+#navbar ul {
+    list-style-type: none;
+    margin: 0px;
+    width: 100%;
+    padding: 0px;
+    background-color: #333;
+}
+#navbar > ul {
+    overflow: hidden;
+}
+#navbar ul li:nth-child(even) {
+    background-color: #555;
+}
+#navbar li {
+    float: left;
+    min-width: 2.5em;
+    cursor: pointer;
+}
+#dd0 ul li {
+    float: none;
+}
+#navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 15px 6px;
+/*    padding: * 6px;*/
+    text-decoration: none;
+    font-size: 10pt;
+    font-weight: bold;
+    touch-action: manipulation;
+}
+/*#navbar li a:hover:not(.active) {
+    background-color: #a6192e;
+}*/
+#navbar .active {
+    padding: 15px 4px;
+    background-color: #4CAF50;
+}
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+.dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 10px 12px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+pre b { color: black; }
+#dd0 .dropdown-submenu {
+    position: relative;
+}
+#dd0 .dropdown-submenu .dropdown-menu {
+    overflow: visible;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    list-style: none;
+    display: block;
+}
+#navbar a:hover.active {
+    background-color: orange;
+}
+/*
+#nav0:hover.active {
+    background-color: #4CAF50;
+}
+*/
+#nav0.active.navhover {
+    background-color: orange;
+}
+#nav0.active:not(.navhover) {
+    background-color: #4CAF50 !important;
+}
+#navbar a:focus, .dropdown:focus .dropbtn {
+    background-color: #a6192e;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 4;
+}
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 10px 12px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+.dropdown-content a:focus {
+    background-color: #ddd;
+}
+/*
+#d0:hover .dropdown-content {
+    display: block;
+    z-index: 5;
+}
+*/
+#d0.show .dropdown-content {
+    display: block;
+    z-index: 5;
+}
+
+.dropdown:focus .dropdown-content {
+    display: block;
+}
+*:focus {
+    outline: none;
+}
+#filter {
+    position: absolute;
+}
+.dot {
+    stroke: black;
+}
+.dot text {
+    stroke: none;
+}
+svg g g             circle { stroke-width: 1px; }
+svg g g.axis:hover .tick   { stroke-width: 1px; }
+svg g g.axis:hover .domain { stroke-width: 1px; }
+svg g g.axis:hover .label  { stroke-width: 1px; }
+
+.dot1 { color: #2952ff; fill: #2952ff; } /* 41  82 255  #2952ff blue  */
+.dot2 { color: #2fb06e; fill: #2fb06e; } /* 47 176 110  #2fb06e green */
+.dot3 { color: #de4949; fill: #de4949; } /*222  73  73  #de4949 red   */
+.dot4 { color: #533464; fill: #533464; } /* 83  51 100  #533464 purple*/
+
+.dot.nohover .dot1 { fill: #ddd !important; stroke: none !important; } /* #595959 */
+.dot.nohover .dot2 { fill: #ddd !important; stroke: none !important; } /* #828282 */
+.dot.nohover .dot3 { fill: #ddd !important; stroke: none !important; } /* #727272 */
+.dot.nohover .dot4 { fill: #ddd !important; stroke: none !important; } /* #434343 */
+
+.dot { cursor: pointer; }
+
+.lines { fill: none; stroke-width: 4px; stroke-linecap: round; }
+.line1 { stroke: #2952ff; }
+.line2 { stroke: #2fb06e; }
+.line3 { stroke: #de4949; }
+.line4 { stroke: #533464; }
+.line1.fit { stroke-dasharray: 10; }
+.line2.fit { stroke-dasharray: 10; }
+.line3.fit { stroke-dasharray: 10; }
+.line4.fit { stroke-dasharray: 10; }
+.line.hover { stroke-width: 8px !important; }
+
+.line.nohover .line1 { stroke: #ddd !important; } /* #595959 !important; } */
+.line.nohover .line2 { stroke: #ddd !important; } /* #828282 !important; } */
+.line.nohover .line3 { stroke: #ddd !important; } /* #727272 !important; } */
+.line.nohover .line4 { stroke: #ddd !important; } /* #434343 !important; } */
+
+#score {
+    display:  none;
+    position: relative;
+    font-size: 7pt;
+}
+#printscore {
+    display:  none;
+    position: relative;
+}
+rect.zoom {
+  stroke: steelblue;
+  fill: #bbb;
+  fill-opacity: 0.5;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+}
+
+.onoffswitch {
+    position: relative; width: 80px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 0px solid #999999; border-radius: 0px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+    cursor: pointer;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 45px; padding: 0; line-height: 41px;
+    font-size: 10pt; color: white; font-family: inherit; font-weight: bold;
+    box-sizing: border-box;
+    border: 0px solid transparent;
+    background-clip: padding-box;
+}
+.onoffswitch-inner:before {
+    content: "ON";
+    padding-left: 5px;
+    border: 2px solid #4CAF50;
+    background-color: #4CAF50; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    content: "OFF";
+    padding-right: 5px;
+    border: 2px solid #A6192E;
+    background-color: #A6192E; color: #FFFFFF;
+    text-align: right;
+}
+.onoffswitch-inner:hover:before, .onoffswitch-inner:hover:after, .onoffswitch-switch:hover {
+    background-color: orange !important; /* important for -switch */
+    border-color: orange;
+}
+.leftrightswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+    cursor: pointer;
+}
+.leftrightswitch-inner:before, .leftrightswitch-inner:after {
+    display: block; float: left; width: 50%; height: 45px; padding: 0; line-height: 41px;
+    font-size: 10pt; color: white; font-family: inherit; font-weight: bold;
+    box-sizing: border-box;
+    border: 0px solid transparent;
+    background-clip: padding-box;
+}
+.leftrightswitch-inner:before {
+    content: "RIGHT";
+    padding-left: 5px;
+    border: 2px solid #4CAF50;
+    background-color: #4CAF50; color: #FFFFFF;
+}
+.leftrightswitch-inner:after {
+    content: "LEFT";
+    padding-right: 5px;
+    border: 2px solid #A6192E;
+    background-color: #A6192E; color: #FFFFFF;
+    text-align: right;
+}
+.leftrightswitch-inner:hover:before, .leftrightswitch-inner:hover:after {
+    background-color: orange !important;
+    border-color: orange;
+}
+.onoffswitch-switch {
+    display: block; width: 25px; margin: 0px;
+    background: #333333;
+    position: absolute; top: 0; bottom: 0;
+    right: 55px;
+    transition: all 0.3s ease-in 0s;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .leftrightswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px;
+}
+#help {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 1em;
+    width: 25em;
+    margin: auto;
+    transform: translate(-50%, -50%);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: rgba(250,250,250,.75);
+    z-index: 2;
+    font-size: 10pt;
+    display: none;
+}
+#alert {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 1em;
+    width: 25em;
+    margin: auto;
+    transform: translate(-50%, -50%);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: rgba(250,250,250,.75);
+    z-index: 3;
+    display: none;
+}
+#alert.active { display: block; }
+</style>
+<style type="text/css" media="print" id="print"></style>
+<body id="body">
+  <script src="../../../.d3.v4.min.js"></script>
+  <script>window.d3 || document.write('<script src="https://d3js.org/d3.v4.min.js">\x3C/script>');</script>
+  <div id="config"><script src="data/.config.json"></script></div>
+  <script>
+// blow away script that read data/.config.json and
+// write an explicit assignment of config to survive saving as Web Archive
+document.getElementById("config").innerHTML="<script>const config='" + config + "';<" + "/script>";
+  </script>
+  <noscript>Javascript support was not detected, so this chart cannot be displayed properly.</noscript>
+  <nav id="navbar" class="noselect"></nav>
+  <span id="legend"></span>
+  <div id="filter"></div>
+  <div id="csv" style="display: none;"></div>
+  <div id="fit" style="display: none;"></div>
+  <div id="chart" class="svg-container"><canvas width="95%" height="95%"></canvas><svg></svg></div>
+  <pre id="score"></pre>
+  <pre id="printscore"></pre>
+  <div id="help">
+<table><caption>Key Bindings<hr width="50%"></caption>
+<tbody id="helptbody">
+<tr><th>ArrowUp</th><td>Mark all tubes checked</td></tr>
+<tr><th>ArrowDown</th><td>Mark all tubes unchecked</td></tr>
+<tr><th>ArrowLeft/N</th><td>Go to next tube (wraps around)</td></tr>
+<tr><th>ArrowRight/P</th><td>Go to previous tube (wraps around)</td></tr>
+<tr><th>Home/PageUp</th><td>Go to first tube</td></tr>
+<tr><th>End/PageDown</th><td>Go to last tube</td></tr>
+<tr><th>Space</th><td>Toggle current tube's checkmark</td></tr>
+<tr><th>1..8</th><td>Go to numbered tube (second press toggles)</td></tr>
+<tr><th>0 (zero)</th><td>Perform double-click on current tube</td></tr>
+<tr><th>B</th><td>Go back to parent directory</td></tr>
+<tr><th>D</th><td>Go to data directory</td></tr>
+<tr><th>C</th><td>Toggle display of current cookie settings</td></tr>
+<tr><th>K</th><td>Clear current cookie settings</td></tr>
+<tr><th>R</th><td>Toggle automatic rescaling on/off</td></tr>
+<tr><th>G</th><td>Toggle greying of checked unhovered tubes</td></tr>
+<tr><th>M</th><td>Toggle between desktop and mobile versions</td></tr>
+<tr><th>S</th><td>Toggle printing of scores</td></tr>
+<tr><th>A</th><td>Toggle y-axis side of graph</td></tr>
+<tr><th>H</th><td>Toggle display of this help screen</td></tr>
+</tbody>
+</table>
+  </div>
+  <div id="alert">
+<dl><dt>Current cookie settings:</dt><dd id="cookie"></dd></dl>
+  </div>
+  <script>
+var d3; // provided by script include
+// var config; // provided by "data/.config.json"
+var zoomed = false;
+
+var dyenames;
+var dyemap;
+var TUBEList = [1, 2, 3, 4, 5, 6, 7, 8];
+var DYEList = [1, 2, 3, 4];
+
+SVGElement.prototype.getTransformToElement =
+    SVGElement.prototype.getTransformToElement ||
+    function(elem) {
+        return elem
+            .getScreenCTM()
+            .inverse()
+            .multiply(this.getScreenCTM());
+    };
+
+window.addEventListener('orientationchange', function () {
+    doRefresh();
+});
+
+const butterfly = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYAQMAAADJbu9PAAAABGdBTUEAALGPC/xhBQAAAAFz" +
+    "UkdCAK7OHOkAAAAGUExURUdwTK0eMLwSRREAAAABdFJOUwBA5thmAAAALklEQVQI12NI4GEAogIZhgobEPphx/CnDoT+/YOi+j8gBOdCZIHK" +
+    "IOqBGsEmAAAPmRzLN2rsDwAAAABJRU5ErkJggg==";
+const butterflyDim = [16, 24]; // x,y dimensions of butterfly png
+const matmacorp = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAScAAAB" +
+    "CCAMAAAAiyuAuAAAAmVBMVEUAAACnqaynqaynqaynqaynqaynqaunqayoqqyoqqynqaynqaynqaynqaynqaynqaytHjCnqaytHjCtHjCnq" +
+    "aynqaynqaunqautHjCtHzCtHjCtHzCtHjCtHjCtHjCtHjCnqqytHjCoqqynqautHzCnqqyuHjCtHjCtHjCtHjCnqqyuHzCoqqyoqqytHjC" +
+    "uHzCnqaytHjCuHzChRlzEAAAAMHRSTlMAgL9A7xBAIEC/MM9Qn3Cvv2Dvn4/fYN/PECCAUIDfcN+vj49An2AQjzBgIN+fQI//Hc/QAAAIS" +
+    "ElEQVR42u1caUPiMBBNGnpQWu5TERER3dV1Sf7/j9slCX0NOQDhGzxdtRn62r7MTCZtumSHAe++Ex/ep/yD3PEfD1zw6cxjnE055w/kDkL" +
+    "+8v/w+cyAcyGeyR2ETPkOc6dtLrgQYkruIJ9cYvHuirq+Ms7IHRuu8OiwPSqTmJM7/vJdbHHef7AzvFJJiPuIJ9OTkHoMHElco0vu4Hwv1" +
+    "IPDnbSV3Dx+8T3EwFET7MAF/0VuHRvtTbZDPUiDkN/3RP5UuZM4yFADwSulHsmto4u44/zTrquUVi/k1jEVKu7EYQ31Uel0H/DUcCcqOfo" +
+    "ovN/7XCqoRLz5Ae8TaXwny6YyPFdOJu4zF0K+4U47LCrDQijltIJrYiJjCllutsdZwhKWsSRLyZnIdnuxJLEoEyaRJKdRJjSKlttGFEXDd" +
+    "hKT62COHCR/fe/bhW4VyqdUO7Ddo2W2jysDJScjTNk7i5I2tgZGvauVBVAKA9uL3ILtyb4oDbOTOydfVLpzyfw6lCBtgQU7XQGPSggkogd" +
+    "MWVTkYSR062T2V+Pk86O7DzWdlOPzKIG4sbVQkMsBvxF7uR4r+YQQSPIDr06dejPbnqdTdJwyC1N6XA9gVyozIZH8vVBZHKGojF2vTo168" +
+    "+ulOtmUw1MpIWn0W4rDsoQOo/yq5ThEmdeyu9gb3Dp9NQ47rCXz8AVxN5GU2c8o35TKBbkytONADZnJEY3aJIRHJ7ra/RyiNVXecIE/Uem" +
+    "Rrz+jbCAhXRt8D9TlM2TxmsWpE8Mwjqqgc4FOF1EmdlVx/WkL8EyeZRvizquT6sHUzKPjvRG1Z0EpLSlt5964C1P2LMoElCbjtu3XsS13K" +
+    "WK3OTdOL6N0CHb4E4SZkqnYb4qqAnXr9CavwnT8uH5RKY0aW6ClM0+EJiUXKEup9RmUzExPmadkoNgpSohGtHfqdLWUmVY1xHS0Vfgq4E8" +
+    "oldTGXEumR0JldOvUk1FhOH5rb8QQVMdvl06RlzIzKHEUQIkKUuIEMyurP6ZOaakk1g2N+odX8CcBh5JfaMNvt06xpDWG8LZTJyB16XQpJ" +
+    "Vxv5I6pwwK0rOnUUtUM/MlEGw+D4UAQBpXm7nvq1ok0NT+G8BxGFJ5GV4Z1ItF5lLhoUB0inlj79Ay/DunUkPlsjRpACQOg/WVNPDq1a8N" +
+    "4qvvTTCa0YAmL5Z+yfSnntpTKM5pQibFFOQxTJgblJKQTMnyD5oTERUttOHTKq4bJasxYb2SUtw+Dvg45iIQNIfqDB0J8OqUYilVmWcHoO" +
+    "d3UrgvClMMTKTHnOcRIKpPrrRJZDTp12nnVsCy0G3bMSmPdN7xHQWi1+t/EBs57gvOUrAWMnnkFO6ITGZ1ByTDGJd4aK4cFs+WyplPUi83" +
+    "Ebs6rlXHe1Y4DjczU3p0HdBpiENuRNmD0FYJJQCdQjk+jZKDMvDq14XRwqFElyyTHRyOzqhvuu2H2vOABCPlPLDYzn0551TeZdN+gTqf5U" +
+    "16le3YiZQLJqG/eNzrULYYsQBNnZXD24T2IOEMo9US479MJXU4rz4IRYKygKASh03HKsZcyKWgJ6WOfTlDD7C8rzKwGcCqFzIBbQCz85dX" +
+    "pjxop9BAe2xeV02i0BY7HHXk7mzI03tlqMEsnjz/huNyRktZWRg/pVOi/YhyhflFptAXccRembIYobZ2avvsI9GR/Age05zZezJtS2uO8O" +
+    "sV66OxhEgqjXQjbcXc5ZVgnO2iz8/wJOhnV5YZsuA3noTF2xypY0kPjvhCOopJSasVdM0hZOim/bEqG2r1BDOAkhnYxcTw/QScIpae8/Xc" +
+    "y6+vZCuoFdx7H6NGTzr10RtB2wnB+Vtz9jHLJzBBCMRTI43Yx0YQlnJ+miK3aopWBVU+572diblHmuhg3jaVRuSTOuAtTDkOUuGTU5snxP" +
+    "J5Bp1PHu+5eDKWKXhK21pod0wlz1QZFv8KIwwbqpzBlEqKETvC0FbGwQkDWBCWB/ARFdYrsCq6+NPRa8QXSuPr26ISidV/zwGgfNrPyU8N" +
+    "DuQLlMZ0gfYrpvasez817pBOCuPP60+uefnCYyDdYhaEsyvgR0CnH/Y0TOx+degGl7aIt7OKb30HP0upHCGfP756EOU/pq+X2M2HWmeLJr" +
+    "xOe2P62jB2jh1n9ecgYogUox0coE5ty2zE8arcxMRwqwj7h+imWW9L+KGXAj8HBkmih7wg/h3QqtwqxYYTTvO0MefG6VIeNa0E4arOkTXt" +
+    "nU5aKcgXK+mPzJlWIosY2wVKOIUtJMm6pA1uyoGFEWZYwRifoq28lQ4VfxjJgpK11SKdCFzS2Md06MOnBZbDnRZRfPezlqkEnjmUHfn8Cq" +
+    "kSGOYoxrKFg0AEY1CnGjWS7YjwATCUamleiJH9sSxa8Px7WCbf3ZuYEb4P10mbiCk8FenSH1GGMjYU2eqONKPHpRH6fS6nQBikynC3UK2S" +
+    "x6kwTo9zxAG9BgIUQcDUR1ClkjN+qIw5zkklnyKz57HmUZZ2SdYzxIH1dGjKWTO9EEXsdeQL+ugD4asfa0BWIPCNbP5nx+HPEBf0Pluqtr" +
+    "OYlqXTEJL8GJZAyKlHIDwC53KvNYg8rAjEpFEEKw0tNJlUUYMEvnugNyI1A6eRbUOd8Be8Jz1z4E7kRIGEdYF5zp5n1upTCDb3f4vUnFEq" +
+    "W0wywYOWT3Ai8/kR2BTfc6dChlFB9citoenXqIjsd4knc3Ost3rgjH2rBBdwJmPVVIr+dNB7QaY7aycKzXv20JreCplendy4xJS5Mb+31Y" +
+    "PiTrQVuFDhHQ3FD6Ym8Rs0oGjpNz55CErOX+/+vol/BC8xLBveX7zB1+QhYP+4vUd9xKv4B/CylE5Cjk3sAAAAASUVORK5CYII=";
+function constrainLegend(coord, left) {
+    if( left ) {
+        return Math.min( window.innerWidth - butterflyDim[0], Math.max( coord, butterflyDim[0]/2 ));
+    } // else top
+    return Math.min( window.innerHeight - butterflyDim[1], Math.max( coord, butterflyDim[1]/2 ));
+};
+function clampLegend() {
+    var left = d3.select("#legend").style('left');
+    var top = d3.select("#legend").style('top');
+    left = +left.substring(0,left.length-2); // remove 'px'
+    top = +top.substring(0,top.length-2); // remove 'px'
+
+    d3.select("#legend").style('left', constrainLegend( left, true ) + 'px' );
+    d3.select("#legend").style('top', constrainLegend( top, false ) + 'px' );
+};
+window.addEventListener('resize', clampLegend );
+
+var lastHovered = 1;
+var justHovered = 0;
+var firstHovered = 1;
+let isHovered = true;
+let noGrey = true;
+let noScore = true;
+let scoreToggle;
+let mobileToggle;
+let greyToggle;
+let rescaleToggle;
+let fitToggle;
+let showFit = false;
+
+const isAndroid = navigator.userAgent.match(/Android/i);
+let isMobile = ("ontouchstart" in document);
+
+if (!isAndroid) {
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = '#d0:hover .dropdown-content { display: block; z-index: 5 }';
+    document.getElementsByTagName('head')[0].appendChild(style);
+};
+
+let menuWithFocus;
+
+function setTubesCookie() {
+    const hex = calcTubeHex();
+    setCookie('t', hex);
+};
+
+function cktube(tube, b) {
+    var cb, cb2;
+    if (b) { // over
+        isHovered = true;
+        cb2 = document.getElementById("lt"+lastHovered );
+        if( !cb2.checked ) {
+            document.getElementById("t"+lastHovered ).checked = false;
+        };
+        d3.select("#d"+lastHovered).style("background-color", lastHovered % 2 ? "#333" : "#555" );
+        d3.select("#d"+tube).style("background-color", "#a6192e" );
+        lastHovered = tube;
+        if (lastHovered != 1) {
+            setCookie("h", lastHovered);
+        } else {
+            clearCookie("h");
+        };
+
+        menuWithFocus = document.getElementById('d'+tube);
+        if (menuWithFocus) { menuWithFocus.focus(); };
+    } else { // out
+        isHovered = false;
+        // if even one tube is locked, clear lastHovered's color
+        for (var j of TUBEList) {
+            cb2 = document.getElementById("lt"+j);
+            if (cb2 && cb2.checked) {
+                d3.select("#d"+lastHovered).style("background-color", lastHovered % 2 ? "#333" : "#555" );
+                break;
+            };
+        };
+    };
+
+    cb = document.getElementById("t" + tube);
+    cb2 = document.getElementById("lt" + tube);
+    if (cb && cb2) {
+        cb.checked = b || cb2.checked;
+    };
+    if (isAndroid) {
+        justHovered = tube;
+    };
+    const nav = document.getElementById('nav' + tube);
+    nav.style.color = cb2.checked ? "orange" : "white";
+    setTubesCookie();
+    return true;
+};
+
+function lktube(tube) {
+    if (tube != lastHovered) {
+        // trying to lock a tube you're not hovering? lktube misfire!
+        cktube(lastHovered, false);
+        cktube(tube, true);
+        return false;
+    };
+    if (justHovered == tube) {
+        justHovered = 0;
+        return false;
+    };
+    const cb2 = document.getElementById("lt" + tube);
+    cb2.checked = !cb2.checked;
+    var nav = document.getElementById('nav' + tube);
+    nav.style.color = cb2.checked ? "orange" : "white";
+    setTubesCookie();
+    return true;
+};
+
+function ulktube(tube) {
+    let flag = false; // assume no tubes locked
+    for (let j of TUBEList) {
+        const nav = document.getElementById('nav' + j);
+        if (!nav) {
+            break;
+        };
+        const cb = document.getElementById("t" + j);
+        const cb2 = document.getElementById("lt" + j);
+        if( !cb2 ) {
+            break;
+        };
+        if (tube != j && cb2.checked) {
+            flag = true; // found one
+        };
+        cb2.checked = tube == j;
+        cb.checked = cb2.checked;
+        nav.style.color = cb2.checked ? "orange" : "white";
+    };
+
+    if (!flag) { // if no other tubes are locked, lock them all
+        for (let jj of TUBEList) {
+            const cb2 = document.getElementById("lt" + jj);
+            if (!cb2) {
+                break;
+            };
+            const nav = document.getElementById('nav' + jj);
+            if (nav) {
+                document.getElementById("t" + jj).checked = true;
+                document.getElementById("lt" + jj).checked = true;
+                nav.style.color = "orange";
+            };
+        };
+    };
+    setTubesCookie();
+    return true;
+};
+
+function setCookie(cname, cvalue, exdays) {
+    switch (cname[0]) {
+      case 't':
+      case 'h':
+      case 'i':
+//      case 'd':
+        // set page cookie
+        document.cookie = cname + "=" + cvalue;
+        break;
+      default:
+        // set site cookie
+        document.cookie = cname + "=" + cvalue + "; path=/";
+        break;
+    };
+};
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for( let c of ca ) {
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+};
+
+function getCookiesPrefix(prefix) {
+    let matches = [];
+    const ca = document.cookie.split(';');
+    for( let c of ca ) {
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        };
+        if (c.charAt(0) == prefix) {
+            matches.push(c);
+        };
+    };
+    return matches;
+};
+
+function clearCookie(cname) {
+    document.cookie = cname + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = cname + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+};
+
+function clearAllCookies() {
+    var cookies = document.cookie.split(";");
+
+    for (var cookie of cookies) {
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        clearCookie(name);
+    };
+};
+
+var samples = 0;
+try {
+    samples = JSON.parse(config);
+} catch (e) {};
+
+var yAxisSide = "left"; // "left" or "right" or "both" or "none"
+var autoRescale = false;
+var legendHidden = false;
+var telem;
+var search_values = window.location.search.replace('\?','').split('&');
+var query = {}; // !!query still evaluates as true
+var dyeQuery = {};
+
+var DefaultDUR = 250;
+var dur = DefaultDUR; // animation duration in ms (1000 = 1 second)
+
+if (search_values == "") { // splash
+    document.write( '<img id=logo src="'+matmacorp+'" class=center>' );
+    var intervalId = window.setInterval( function() {
+        d3.select("#logo").transition().duration(1000)
+            .style("width", 0)
+            .style("opacity", 0);
+        window.clearInterval( intervalId );
+    }, 1000 );
+};
+
+for (var value of search_values) {
+    telem = value.split('=');
+    if (telem != "") {
+        if (telem[0].substring(0,1) == 'd' && telem[1] == '0') {
+            dyeQuery[decodeURIComponent(telem[0].substring(1)).trim()] = telem[1];
+        } else {
+            switch (telem[0]) { // store only recognized parameters
+              case 't':
+                setCookie('t',telem[1]);
+                // tube 8 is most significant bit, tube 1 least significant bit
+                // convert hex to 1xxxxxxxx bitstring (forces 9 bits)
+                var byte = (256+parseInt(telem[1],16)).toString(2);
+                for (var i of TUBEList) // 1-8, skipping 0th bit (256)
+                {
+                    if (byte[i] == '1')
+                    {
+                        query['t'+(9-i)] = 1;
+                    } else {
+                        query['t'+(9-i)] = 0;
+                    };
+                };
+                break;
+
+              case 'x':
+              case 'y':
+                setCookie(telem[0],telem[1]);
+                var ln = telem[1].length;
+                if (telem[1].substring(ln-2, ln) == 'px') {
+                    telem[1] = telem[1].substring(0,telem[1].length-2);
+                };
+                d3.select("#legend")
+                    .style( telem[0] == 'x' ? 'left' : 'top',
+                            constrainLegend( +telem[1], true ) + 'px' );
+                break;
+
+              case 'l':
+                setCookie(telem[0],telem[1]);
+                if (telem[1] == '0') {
+                    legendHidden = true;
+                };
+                break;
+
+              case 'h':
+                setCookie(telem[0],telem[1]);
+                if (+telem[1]) {
+                    lastHovered = +telem[1];
+                };
+                firstHovered = lastHovered;
+                break;
+
+              case 'i':
+                setCookie(telem[0],telem[1]);
+                if (+telem[1] == 0) {
+                    isHovered = false;
+                };
+                break;
+
+              case 'a':
+                setCookie(telem[0],telem[1]);
+                dur = +telem[1];
+                break;
+
+              case 's':
+                setCookie(telem[0],telem[1]);
+                yAxisSide = telem[1];
+                break;
+
+              case 'r':
+                setCookie(telem[0],telem[1]);
+                autoRescale = (telem[1] != '0');
+                break;
+
+              case 'm':
+                setCookie(telem[0],telem[1]);
+                isMobile = (telem[1] != '0');
+                break;
+
+              case 'g':
+                setCookie(telem[0],telem[1]);
+                noGrey = (telem[1] != '0');
+                break;
+
+              case 'p':
+                setCookie(telem[0],telem[1]);
+                noScore = (telem[1] != '0');
+                break;
+
+              case 'f': // FIT
+                setCookie(telem[0],telem[1]);
+                showFit = (telem[1] != '0');
+                break;
+            };
+        };
+    };
+};
+
+let matches = getCookiesPrefix("d");
+if (matches) {
+    for (let dye of matches) {
+	let sp = dye.split("=");
+        if (sp[1] == "0") {
+            dyeQuery[sp[0].substring(1)]='0';
+        };
+    };
+};
+
+let option = getCookie("t");
+if (option) {
+    // tube 8 is most significant bit, tube 1 least significant bit
+    // convert hex to 1xxxxxxxx bitstring (forces 9 bits)
+    var byte = (256+parseInt(option,16)).toString(2);
+    for (var i of TUBEList) // 1-8, skipping 0th bit (256)
+    {
+        if (byte[i] == '1')
+        {
+            query['t'+(9-i)] = 1;
+        } else {
+            query['t'+(9-i)] = 0;
+        };
+    };
+};
+
+option = getCookie("x");
+if (option) {
+    var ln = option.length;
+    if (option.substring(ln-2, ln) == 'px') {
+        option = option.substring(0,option.length-2);
+    };
+    d3.select("#legend")
+        .style( 'left', constrainLegend( +option, true ) + 'px' );
+};
+option = getCookie("y");
+if (option) {
+    var ln = option.length;
+    if (option.substring(ln-2, ln) == 'px') {
+        option = option.substring(0,option.length-2);
+    };
+    d3.select("#legend")
+        .style( 'top', constrainLegend( +option, true ) + 'px' );
+};
+option = getCookie("l");
+if (option) {
+    if (option == '0') {
+        legendHidden = true;
+    };
+};
+option = getCookie("h");
+if (option) {
+    if (+option) {
+        lastHovered = +option;
+    };
+    firstHovered = lastHovered;
+};
+option = getCookie("i");
+if (option) {
+    if (+option == 0) {
+        isHovered = false;
+    };
+};
+option = getCookie("a");
+if (option) {
+    dur = +option;
+};
+option = getCookie("s");
+if (option) {
+    yAxisSide = option;
+};
+option = getCookie("r");
+if (option) {
+    autoRescale = (option != '0');
+};
+option = getCookie("m");
+if (option) {
+    isMobile = (option != '0');
+};
+option = getCookie("g");
+if (option) {
+    noGrey = (option != '0');
+};
+option = getCookie("p");
+if (option) {
+    noScore = (option != '0');
+};
+option = getCookie("f"); // FIT
+if (option) {
+    showFit = (option != '0');
+};
+if (isEmpty(query)) {
+    isHovered = true;
+} else if (!isHovered) {
+    firstHovered = 0;
+};
+
+if (notLive) {
+    d3.select("#navbar").selectAll("*").remove();
+};
+var ul = d3.select("#navbar")
+  .append("ul")
+    .attr( "display", "block" )
+    .attr( "id", "navbard" );
+
+var bun = ul
+  .append("li")
+    .classed("dropdown", true )
+    .attr( "id", "d0" )
+//    .attr( "tabindex", "-1" )
+    .style( "float", "left" )
+    .classed("burger", true)
+    .attr( "onmouseover", 'd3.select("#nav0").classed("navhover", true)' )
+    .attr( "onmouseout", 'd3.select("#nav0").classed("navhover", false)' )
+    .attr( "onclick", "dropdownBun();")
+  .html( '<div id="dd0" class="dropdown-content">' )
+  .insert("a", "div")
+    .classed( "dropbtn", true )
+    .classed( "active", true )
+    .classed( "burger", true )
+    .attr( "id", "nav0" )
+  .append("svg")
+    .attr("width",16)
+    .attr("height",15)
+    .classed("burger", true)
+  .append("g")
+    .classed("burger", true)
+    .attr("style","stroke:#FFF;stroke-width:3;stroke-linecap:round");
+
+bun.append("path").attr("d","m 0,14 16,0 0,0").classed("burger", true);
+bun.append("path").attr("d","m 0,8 16,0 0,0").classed("burger", true);
+bun.append("path").attr("d","m 0,2 16,0 0,0").classed("burger", true);
+
+function dropdownBun() {
+    document.getElementById("d0").classList.toggle('show');
+};
+
+window.onclick = function(e) {
+    if (e.target.matches(".burger")) { return; };
+    const d0 = document.getElementById("d0");
+    if (d0.classList.contains('show')) {
+        d0.classList.remove('show');
+    };
+    d3.select("#nav0").classed("navhover", false);
+};
+
+function setTubes() {
+    for (tube of TUBEList) {
+        const navd = document.getElementById("nav"+tube);
+        const ltd = d3.select("#lt"+tube);
+        if (!isEmpty(query)) {
+            navd.style.color = query['t'+tube] == 1 ? "orange" : "white";
+            ltd.property( "checked", query['t'+tube] == 1 );
+	} else {
+            navd.style.color = "white";
+            ltd.property( "checked", false );
+        };
+    };
+};
+
+// the zero and the 1+ are for the hamburger button
+var navElements = [ 0 ].concat(TUBEList);
+if (samples) {
+    navElements.length = 1 + samples.length;
+};
+ul.selectAll("li")
+  .data(navElements).enter()
+  .append("li")
+    .classed( "dropdown", true )
+    .attr( "id", d => 'd'+d )
+    .attr("tabindex", "-1")
+  .html( d => "<div id=dd"+d+" class=dropdown-content "+
+                  "onmouseover='cktube("+d+", true )' "+
+                  "onmouseout='cktube("+d+", false )'>" )
+  .insert("a", "div")
+    .classed( "dropbtn", true )
+    .attr( "id", d => "nav"+d )
+    .attr( "ondblclick",  d => "ulktube("+d+")" )
+    .attr( "onclick",     d => "lktube(" +d+")" )
+    .attr( "onmouseover", d => "cktube(" +d+", true)" )
+    .attr( "onmouseout",  d => "cktube(" +d+", false)" )
+  .insert("label", "div")
+    .classed("cb-container noselect dot0", true )
+  .html( d => (samples ? samples[d-1].id : d) + "<span class=checkmark></span>" )
+  .insert("input", "span")
+    .attr("id", d => "lt"+d )
+    .attr("type", "checkbox" )
+    .property( "checked", function(d) {
+        const navd = document.getElementById("nav"+d);
+        if (!isEmpty(query)) {
+            navd.style.color = query['t'+d] == 1 ? "orange" : "white";
+            return query['t'+d] == 1;
+        };
+        navd.style.color = "white";
+        return false;
+    });
+
+var swipe; // to make swipe() function global
+d3.select("#navbard")
+  .insert("li", "#d1")
+    .attr( "id", "dnext" )
+    .classed( "dropdown", true )
+    .style( "float", "right" )
+  .append("a")
+    .attr( "id", "next" )
+    .classed( "dropbtn", true )
+    .classed( "active", true )
+    .attr( "onclick", "swipe('left');" )
+  .html("<u>N</u>EXT TUBE");
+
+var next = document.getElementById("next");
+next.addEventListener("touchstart", function(e) {
+    d3.select("#next").style("background-color", "#a6192e");
+});
+next.addEventListener("touchend", function(e) {
+    d3.select("#next").style("background-color", "#4CAF50");
+});
+
+// only way to detect if no parameters given.
+function isEmpty( obj ) {
+    for (var name in obj) {
+        return false;
+    };
+    return true;
+};
+
+function help() {
+    // popup-like window centered in screen with keybinding information
+    const helpWidget = d3.select("#help");
+    helpWidget
+        .style("display", helpWidget.style("display") == "none" ? "block" : "none");
+};
+
+function d3chart() {
+    const testDuration = 0;
+    const file  = "data/scanoutput.csv";
+    const file2 = "data/scanoutput_fit.csv";
+
+    function datumHover(hsvg, path) {
+        function fixTouchMove( event ) {
+            return;
+        };
+        document.body.removeEventListener( "touchstart", fixTouchMove, false );
+        document.body.addEventListener("touchstart", fixTouchMove, false );
+
+        // find the nearest dot and highlight it
+        // adapted from https://observablehq.com/@d3/multi-line-chart
+
+        if ("ontouchstart" in document) {
+            hsvg.on("touchmove", moved)
+                .on("touchstart", entered)
+                .on("touchend", tleft);
+        } else {
+            hsvg.on("mousemove", moved)
+                .on("mouseenter", entered)
+                .on("click", mclick)
+                .on("mouseleave", left);
+        };
+
+        let motion = false;
+        let reject = false;
+        function moved() {
+            if (!isMobile) { return; };
+            if ("ontouchstart" in document) {
+                if (reject || d3.event.touches.length != 1) {
+                    motion = false;
+                    reject = true;
+                    return;
+                };
+            };
+            motion = true;
+            d3.event.preventDefault();
+            const TIMES = q.map( d => visTimes(d) ).filter( d => d != undefined );
+            const DS = q.map( d => visiblesD(d) ).filter( d => d != undefined );
+            const m = d3.mouse(this);
+            const ym = yScale.invert(m[1]);
+            const xm = xScale.invert(m[0]);
+            const i1 = d3.bisectLeft(TIMES, xm, 1);
+            const i0 = i1 - 1;
+            const i = xm - TIMES[i0] > TIMES[i1] - xm ? i1 : i0;
+
+            const w = visTubeCount() * 2; // # of visible tubes * 2
+            const ds = DS.slice( (i - w < 0 ) ? 0 : i - w, i + w );
+            const D = ds.reduce((a, b) => Math.abs(signals(a) - ym) < Math.abs(signals(b) - ym) ? a : b );
+            const s = signals(D);
+            const t = xValue(D);
+
+            hdot.attr("transform", `translate(${xScale(t)},${yScale(s)})`);
+            const direction = xScale(t)*2 < window.innerWidth;
+
+            var tip = tooltip2Text(D);
+            if (stickySignal) {
+                 const delta = signals(D) - stickySignal;
+                 tip += ", delta= " + delta.toFixed(0);
+            };
+
+            hdot.select("text")
+              .text( tip )
+                .attr("text-anchor", direction ? "start" : "end" )
+                .attr("y", direction ? 12 : -8 );
+
+            nonstickyDot = D;
+            horizontalLine
+                .attr("y1", yScale(s))
+                .attr("y2", yScale(s))
+                .attr("opacity", 1);
+            verticalLine
+                .attr("x1", xScale(t))
+                .attr("x2", xScale(t))
+                .attr("opacity", 1);
+
+            hdot.attr("display", stickyDot != nonstickyDot ? null : "none" );
+        };
+
+        function entered() {
+            if ("ontouchstart" in document) {
+                if (isAndroid) {
+                    // close menu if open
+                    const d0 = document.getElementById("d0");
+                    if (d0.classList.contains('show')) {
+                        d0.classList.remove('show');
+                    };
+                };
+                d3.select("#nav0").classed("navhover", false);
+                if (d3.event.touches.length != 1) {
+                    return false;
+                };
+            };
+            motion = false;
+            reject = false;
+//            hdot.attr("display", null);
+            return null;
+        };
+
+        function left() {
+            hdot.attr("display", "none");
+            horizontalLine.attr("opacity", 0);
+            verticalLine.attr("opacity", 0);
+            refresh();
+        };
+
+        function tleft() {
+            if (motion) {
+                stickyDot = nonstickyDot;
+                stickyTime = xValue(stickyDot);
+                stickySignal = signals(stickyDot);
+                const stext = hdot.select("text");
+                sdot.attr("transform", `translate(${xScale(stickyTime)},${yScale(stickySignal)})`);
+                sdot.select("text")
+                    .attr("text-anchor", stext.attr("text-anchor"))
+                    .attr("y", stext.attr("y"))
+                  .text( tooltip2Text(stickyDot) );
+                sdot.attr("display", null );
+                stickyHorizontalLine
+                    .attr("y1", yScale(stickySignal))
+                    .attr("y2", yScale(stickySignal))
+                    .attr("opacity", 1);
+                stickyVerticalLine
+                    .attr("x1", xScale(stickyTime))
+                    .attr("x2", xScale(stickyTime))
+                    .attr("opacity", 1);
+            } else if (!reject) {
+                clearSticky();
+
+                cktube(lastHovered, false);
+                tds = tubesAndDyes();
+                ts = tubeStates("t");
+                lts = tubeStates("lt");
+                if( isLocked(lts) ) {
+                    for( let ttube of TUBEList ) {
+                        for( let c of DYEList ) {
+                            mlinesEnter.select('#t'+ttube+'c'+c)
+                                .classed( "hover", false )
+                                .classed( "nohover", false )
+                                .attr("display", ts[ttube] && tds[ttube][c] ? 'inline' : 'none' );
+                        };
+                    };
+                };
+                rescaleGraphForce();
+                document.getElementById('d'+lastHovered).blur();
+            };
+            left();
+        };
+
+        function mclick() {
+            tleft();
+            entered();
+        };
+    }; // function datumHover
+
+    if( notLive ) { // reset everything
+        d3.select("#chart svg").selectAll("*").remove();
+        d3.select("#filter").selectAll("*").remove();
+        d3.select("#legend").selectAll("*").remove();
+    };
+    if (isHovered) {
+        menuWithFocus = document.getElementById('d'+firstHovered);
+        if (menuWithFocus) { menuWithFocus.focus(); };
+    };
+
+    // Create a div for tooltips, though we'll move them later to appear next to the mouse.
+    const sticky = d3.select("body")
+      .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+    const stickySpan = sticky
+      .append("span")
+        .attr("class","tooltiptext");
+    const tooltip = d3.select("body")
+      .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+    const tooltipSpan = tooltip
+      .append("span")
+        .attr("class","tooltiptext");
+
+    var stickySignal = "";
+    var stickyTime = "";
+    var stickyDot = "";
+    var stickyThis = "";
+    var nonstickyDot = "";
+    var nonstickyThis = "";
+
+    var margin;
+    if (yAxisSide == "left") {
+        margin = {
+            top: 10,
+            right: -40,
+            bottom: 40,
+            left: 60
+        };
+    } else if (yAxisSide == "right") {
+        margin = {
+            top: 10,
+            right: 0,
+            bottom: 40,
+            left: 30
+        };
+    } else if (yAxisSide == "both") {
+        margin = {
+            top: 10,
+            right: 0,
+            bottom: 40,
+            left: 60
+        };
+    } else { // "none"
+        margin = {
+            top: 10,
+            right: -40,
+            bottom: 40,
+            left: 30
+        };
+    };
+    var navbarHeight = document.getElementById("navbar").clientHeight;
+    var height = (window.innerHeight - 40) - margin.top - margin.bottom - navbarHeight;
+    var width = (window.innerWidth - 60) - margin.left - margin.right;
+
+    var svg = d3.select("#chart svg")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + window.innerWidth + " " + window.innerHeight )
+        .classed("svg-content", true );
+    svg = svg
+      .append("g")
+        .attr("id", "graph")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    /*if( !isMobile )*/ {
+        // create an invisible object that can take clicks to clear sticky tooltip
+        const gRect = svg.append("g").attr("id", "gRect");
+        const transpRect = gRect.append("rect")
+            .attr("id", "transpRect" )
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", width).attr("height", height)
+            .attr("opacity", 0.0)
+            .on("mousedown", onMouseDown );
+    };
+
+    const stickyVerticalLine = svg
+      .append("line")
+        .attr("opacity", 0)
+        .attr("y1", 0)
+        .attr("y2", height)
+        .attr("pointer-events", "none");
+
+    const stickyHorizontalLine = svg
+      .append("line")
+        .attr("opacity", 0)
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("pointer-events", "none");
+
+    function clearSticky() {
+        sticky2Span.text("");
+        sticky.transition().duration(dur).style("opacity", 0.0);
+        stickySignal = "";
+        stickyTime = "";
+        stickyHorizontalLine.attr("opacity", 0 );
+        stickyVerticalLine.attr("opacity", 0 );
+        stickyDot="";
+        stickyThis="";
+        sdot.attr("display", "none");
+        horizontalLine.attr("opacity", 0 );
+        verticalLine.attr("opacity", 0 );
+        hdot.attr("display", "none");
+        tooltip.transition().duration(dur).style("opacity", 0.0);
+    };
+
+    function onMouseDown() {
+        var type = d3.event.type;
+        if (d3.event.button == undefined || (d3.event.button === 0 && !d3.event.ctrlKey))
+        {
+            var e = this,
+                origin = d3.mouse(e),
+                rect = svg.append("rect").attr("class", "zoom");
+            d3.select("body").classed("noselect", true);
+            origin[0] = Math.max(0, Math.min(width, origin[0]));
+            origin[1] = Math.max(0, Math.min(height, origin[1]));
+            d3.select(window)
+               .on(
+                   "mousemove.zoomRect",
+                   function() {
+                       if( d3.touches(this).length > 1 ) {
+                           d3.select(window)
+                               .on("mousemove.zoomRect", null)
+                               .on("mouseup.zoomRect", null);
+                           rect.remove();
+                           return;
+                       };
+                       var m = d3.mouse(e);
+                       m[0] = Math.max(0, Math.min(width, m[0]));
+                       m[1] = Math.max(0, Math.min(height, m[1]));
+                       rect.attr("x", Math.min(origin[0], m[0]))
+                           .attr("y", Math.min(origin[1], m[1]))
+                           .attr("width", Math.abs(m[0] - origin[0]))
+                           .attr("height", Math.abs(m[1] - origin[1]));
+                   },
+                   true
+               )
+               .on(
+                   "mouseup.zoomRect",
+                   function() {
+                       d3.select(window)
+                           .on("mousemove.zoomRect", null)
+                           .on("mouseup.zoomRect", null);
+                       d3.select("body").classed("noselect", false);
+                       rect.remove();
+                       var m = d3.mouse(e);
+                       m[0] = Math.max(0, Math.min(width, m[0]));
+                       m[1] = Math.max(0, Math.min(height, m[1]));
+                       if ((Math.abs(m[0] - origin[0]) > 15) && (Math.abs(m[1] - origin[1]) > 15)) {
+                           xScale.domain(
+                               [origin[0], m[0]].map(xScale.invert, xScale).sort(function(a,b) {
+                                   return a-b;
+                               })
+                           );
+                           yScale.domain(
+                               [origin[1], m[1]].map(yScale.invert, yScale).sort(function(a,b) {
+                                   return a-b;
+                               })
+                           );
+                           zoomed = true;
+                           refresh();
+                       } else if (Math.abs(m[0] - origin[0]) <= 15) {
+                           /* if (!isMobile) */ {
+                               clearSticky();
+                               if (zoomed) {
+                                   rescaleGraphForce();
+                               };
+                           };
+                       } else if( m[0] - origin[0] > 0 ) {
+                           swipe("right");
+                       } else if( m[0] - origin[0] < 0 ) {
+                           swipe("left");
+                       };
+                       //refresh();
+                   },
+                   true
+               );
+
+            d3.event.stopPropagation();
+        };
+
+        /* Copyright 2012 Jason Davies https://www.jasondavies.com
+         *
+         * Permission to use, copy, modify, and/or distribute this software for any
+         * purpose with or without fee is hereby granted, provided that the above
+         * copyright notice and this permission notice appear in all copies.
+         *
+         * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+         * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+         * AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+         * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+         * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+         * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+         * PERFORMANCE OF THIS SOFTWARE.
+         */
+    };
+
+    const verticalLine = svg
+      .append("line")
+        .attr("opacity", 0)
+        .attr("y1", 0)
+        .attr("y2", height)
+        .attr("pointer-events", "none");
+
+    const horizontalLine = svg
+      .append("line")
+        .attr("opacity", 0)
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("pointer-events", "none");
+
+    // setup x (time) and the four y (channel signal) values.
+
+    const tim="TIME",
+          name="NAME",
+          dye="CHANNEL",
+          tube="TUBE",
+          signal="SIGNAL";
+
+    var xScale = d3.scaleLinear().range([0, width]);
+    var yScale = d3.scaleLinear().range([height, 0]);
+
+    const xAxis = d3.axisBottom(xScale);
+    const yAxis = d3.axisLeft(yScale);
+    const y2Axis = d3.axisRight(yScale);
+
+    // "+d" helps distinguish integers from strings.
+    var xValue  = d => +d[tim];
+    var names   = d =>  d[name].trim();
+    var dyes    = d => +d[dye];
+    var tubes   = d => +d[tube];
+    var signals = d => +d[signal];
+
+    let dotsEnter;
+
+    function refresh() {
+        if (isMobile) {
+            d3.select("#ismobile").attr("display", "inline");
+            d3.select("#notmobile").attr("display", "none");
+            mlinesEnter.selectAll('path').transition().duration(dur)
+                .attr('d', d => mline(d) );
+        } else {
+            d3.select("#ismobile").attr("display", "none");
+            d3.select("#notmobile").attr("display", "inline");
+            dotsEnter.transition().duration(dur)
+                .attr("transform", d => "translate(" + xMap(d) + "," + sigMap(d) + ")");
+        };
+        if (f) { // FIT
+            mlinesEnter.selectAll('path').transition().duration(dur)
+                .attr('d', d => fline(d) );
+            flinesEnter.selectAll('path').transition().duration(dur)
+                .attr('d', d => fline(d) );
+        };
+        svg.select(".x").transition().duration(dur)
+            .call(d3.axisBottom(xScale));
+
+        svg.select(".y").transition().duration(dur)
+            .call(d3.axisLeft(yScale));
+        svg.select(".y2").transition().duration(dur)
+            .call(d3.axisRight(yScale));
+
+        if (nonstickyDot) {
+            verticalLine
+                .attr("x1", xScale(xValue(nonstickyDot)))
+                .attr("x2", xScale(xValue(nonstickyDot)));
+            horizontalLine
+                .attr("y1", yScale(signals(nonstickyDot)))
+                .attr("y2", yScale(signals(nonstickyDot)));
+            hdot
+                .attr("transform", `translate(${xScale(xValue(nonstickyDot))},${yScale(signals(nonstickyDot))})`);
+        };
+
+        if (stickySignal) {
+            tds = tubesAndDyes();
+            ts = tubeStates("t");
+            lts = tubeStates("lt");
+            if( !visibles(stickyDot) ) {
+                clearSticky();
+            } else {
+                var dest = svg.append("circle")
+                    .style("visibility", "hidden")
+                    .attr("cx", xScale(xValue(nonstickyDot)))
+                    .attr("cy", yScale(signals(nonstickyDot)))
+                    .attr("r", 10);
+                var rect = dest.node().getBoundingClientRect();
+                tooltip.transition().duration(dur)
+                    .style("top", rect.top + "px")
+                    .style("left", rect.left + "px");
+                stickyVerticalLine.transition().duration(dur)
+                    .attr("x1", xScale(stickyTime))
+                    .attr("x2", xScale(stickyTime));
+                stickyHorizontalLine.transition().duration(dur)
+                    .attr("y1", yScale(stickySignal))
+                    .attr("y2", yScale(stickySignal));
+                dest
+                    .attr("cx", xScale(stickyTime))
+                    .attr("cy", yScale(stickySignal));
+                rect = dest.node().getBoundingClientRect();
+                stickySpan.classed("right", rect.left*2 < window.innerWidth);
+                sticky.transition().duration(dur)
+                    .style("top", rect.top + "px")
+                    .style("left", rect.left + "px");
+                sdot.transition().duration(dur)
+                    .attr("transform",
+                          `translate(${xScale(xValue(stickyDot))},${yScale(signals(stickyDot))})`);
+                dest.remove();
+            };
+        };
+    };
+
+    var xMap = d => xScale(xValue(d));
+    var sigMap = d => yScale(signals(d));
+
+    var lastModified;
+    var q=[{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":99.4865,"TIME":0.0700731,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":136.942,"TIME":0.130621,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":92.3655,"TIME":0.139183,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":130.532,"TIME":0.199794,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":92.4261,"TIME":0.208366,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":138.299,"TIME":0.269261,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":94.018,"TIME":0.277571,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":136.039,"TIME":0.338635,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":99.7073,"TIME":0.34675,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":139.516,"TIME":0.407812,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":93.9716,"TIME":0.415896,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":142.672,"TIME":0.477281,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":100.21,"TIME":0.485531,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":137.511,"TIME":0.546082,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":114.657,"TIME":0.554988,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":132.587,"TIME":0.615246,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":102.662,"TIME":1.18864,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":136.942,"TIME":1.24891,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":96.7121,"TIME":1.25703,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":129.417,"TIME":1.31733,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":98.5201,"TIME":1.32586,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":138.299,"TIME":1.38744,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":98.2915,"TIME":1.39535,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":140.392,"TIME":1.4557,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":97.5397,"TIME":1.46391,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":147.029,"TIME":1.52483,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":93.9716,"TIME":1.53273,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":153.399,"TIME":1.59348,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":107.517,"TIME":1.60191,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":145.909,"TIME":1.66264,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":122.565,"TIME":1.67117,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":138.851,"TIME":1.73188,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":106.895,"TIME":2.30395,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":147.395,"TIME":2.36429,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":105.405,"TIME":2.37238,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":137.226,"TIME":2.43299,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":105.63,"TIME":2.44153,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":141.466,"TIME":2.50204,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":103.633,"TIME":2.51024,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":150.187,"TIME":2.57148,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":99.7073,"TIME":2.57956,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":157.761,"TIME":2.64035,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":90.8736,"TIME":2.64837,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":167.345,"TIME":2.70884,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":118.999,"TIME":2.71735,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":160.605,"TIME":2.77772,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":126.518,"TIME":2.78642,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":149.291,"TIME":2.84693,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":114.304,"TIME":3.42071,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":159.939,"TIME":3.48156,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":111.925,"TIME":3.48942,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":142.805,"TIME":3.5501,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":110.708,"TIME":3.55859,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":142.522,"TIME":3.61898,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":107.907,"TIME":3.62698,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":159.981,"TIME":3.68789,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":98.6235,"TIME":3.69639,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":167.42,"TIME":3.75715,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":97.0696,"TIME":3.76525,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":182.363,"TIME":3.826,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":127.35,"TIME":3.83424,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":175.301,"TIME":3.89521,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":133.108,"TIME":3.90392,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":160.774,"TIME":3.96463,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":118.537,"TIME":4.5406,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":169.348,"TIME":4.60116,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":116.272,"TIME":4.60974,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":148.383,"TIME":4.67031,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":114.771,"TIME":4.67894,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":145.689,"TIME":4.73949,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":115.386,"TIME":4.74763,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":168.688,"TIME":4.8088,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":99.7073,"TIME":4.81693,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":178.152,"TIME":4.87766,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":95.0043,"TIME":4.88654,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":197.381,"TIME":4.94728,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":136.745,"TIME":4.95558,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":193.146,"TIME":5.01691,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":141.015,"TIME":5.02589,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":176.434,"TIME":5.08673,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":123.829,"TIME":5.66164,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":179.801,"TIME":5.72276,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":122.792,"TIME":5.73067,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":156.193,"TIME":5.79109,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":118.834,"TIME":5.79969,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":147.8,"TIME":5.86046,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":118.591,"TIME":5.8687,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":181.748,"TIME":5.92915,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":101.875,"TIME":5.93746,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":188.884,"TIME":5.99827,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":102.233,"TIME":6.0063,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":213.472,"TIME":6.06714,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":148.227,"TIME":6.07561,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":207.841,"TIME":6.13613,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":148.922,"TIME":6.1451,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":190.006,"TIME":6.20543,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":131.238,"TIME":6.78033,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":190.255,"TIME":6.84078,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":128.225,"TIME":6.84903,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":161.771,"TIME":6.90995,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":120.865,"TIME":6.91854,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":148.856,"TIME":6.97947,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":122.864,"TIME":6.98755,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":195.896,"TIME":7.04817,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":102.959,"TIME":7.05716,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":197.469,"TIME":7.11722,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":100.168,"TIME":7.12581,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":230.635,"TIME":7.18679,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":156.578,"TIME":7.1953,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":225.686,"TIME":7.25581,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":154.194,"TIME":7.26458,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":206.71,"TIME":7.32582,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":133.354,"TIME":7.90037,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":203.844,"TIME":7.96114,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":132.572,"TIME":7.96924,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":170.696,"TIME":8.03,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":124.928,"TIME":8.03862,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":149.912,"TIME":8.09941,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":131.411,"TIME":8.1076,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":207.867,"TIME":8.16828,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":104.042,"TIME":8.17663,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":210.348,"TIME":8.23784,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":104.298,"TIME":8.24624,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":252.09,"TIME":8.30754,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":164.929,"TIME":8.31585,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":247.73,"TIME":8.37683,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":163.419,"TIME":8.38561,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":227.59,"TIME":8.44671,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":146.055,"TIME":9.02111,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":219.525,"TIME":9.08185,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":141.265,"TIME":9.08997,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":177.39,"TIME":9.15079,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":130.006,"TIME":9.15932,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":153.079,"TIME":9.21979,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":136.753,"TIME":9.22828,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":220.927,"TIME":9.28872,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":110.545,"TIME":9.29704,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":221.08,"TIME":9.35845,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":114.625,"TIME":9.36681,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":269.253,"TIME":9.42723,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":179.543,"TIME":9.43576,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":267.675,"TIME":9.49632,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":173.963,"TIME":9.5051,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":246.382,"TIME":9.56587,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":150.288,"TIME":10.1386,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":234.16,"TIME":10.1992,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":144.525,"TIME":10.2072,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":185.2,"TIME":10.2679,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":131.022,"TIME":10.2766,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":155.19,"TIME":10.3371,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":142.095,"TIME":10.3454,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":236.163,"TIME":10.4072,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":115.964,"TIME":10.4155,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":237.178,"TIME":10.4766,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":117.723,"TIME":10.4849,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":289.635,"TIME":10.5452,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":186.85,"TIME":10.5538,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":291.818,"TIME":10.6147,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":181.87,"TIME":10.6235,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":268.305,"TIME":10.6841,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":156.638,"TIME":11.2593,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":247.749,"TIME":11.3207,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":149.958,"TIME":11.3287,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":195.241,"TIME":11.3901,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":134.069,"TIME":11.3988,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":155.19,"TIME":11.4593,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":149.574,"TIME":11.4675,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":255.753,"TIME":11.5281,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":119.215,"TIME":11.5364,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":248.983,"TIME":11.5977,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":123.919,"TIME":11.6058,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":313.235,"TIME":11.6665,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":198.332,"TIME":11.675,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":318.06,"TIME":11.7364,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":187.142,"TIME":11.7452,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":291.273,"TIME":11.8062,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":162.989,"TIME":12.3814,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":262.384,"TIME":12.4423,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":154.305,"TIME":12.4505,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":205.282,"TIME":12.5114,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":135.084,"TIME":12.5201,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":159.413,"TIME":12.5811,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":154.916,"TIME":12.5893,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":264.459,"TIME":12.6501,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":125.718,"TIME":12.6581,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":264.008,"TIME":12.7189,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":124.951,"TIME":12.7273,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":338.98,"TIME":12.7881,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":206.683,"TIME":12.7965,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":346.402,"TIME":12.8571,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":196.367,"TIME":12.8658,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":320.505,"TIME":12.9267,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":171.455,"TIME":13.5028,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":279.11,"TIME":13.5637,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":158.651,"TIME":13.5723,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":213.091,"TIME":13.6326,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":136.1,"TIME":13.6412,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":160.469,"TIME":13.7019,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":152.779,"TIME":13.71,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":291.667,"TIME":13.7711,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":128.969,"TIME":13.7794,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":276.886,"TIME":13.84,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":143.539,"TIME":13.8481,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":365.799,"TIME":13.9096,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":221.297,"TIME":13.9179,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":367.396,"TIME":13.9784,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":202.956,"TIME":13.9875,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":348.693,"TIME":14.0476,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":176.747,"TIME":14.6224,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":301.062,"TIME":14.683,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":162.998,"TIME":14.6913,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":225.364,"TIME":14.7521,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":139.147,"TIME":14.7607,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":162.58,"TIME":14.8219,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":167.737,"TIME":14.8302,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":309.08,"TIME":14.8908,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":134.388,"TIME":14.9001,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":297.277,"TIME":14.9604,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":147.67,"TIME":14.9686,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":397.98,"TIME":15.0292,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":228.604,"TIME":15.0376,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":408.335,"TIME":15.0984,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":216.135,"TIME":15.1073,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":383.144,"TIME":15.1681,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":183.097,"TIME":15.7436,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":323.015,"TIME":15.8037,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":166.258,"TIME":15.8119,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":236.52,"TIME":15.8729,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":138.131,"TIME":15.8816,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":164.692,"TIME":15.9428,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":172.01,"TIME":15.951,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":338.464,"TIME":16.012,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":132.221,"TIME":16.0203,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":315.522,"TIME":16.0815,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":141.474,"TIME":16.0898,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":431.235,"TIME":16.1513,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":240.086,"TIME":16.1595,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":441.925,"TIME":16.2205,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":222.725,"TIME":16.2292,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":415.508,"TIME":16.2897,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":191.564,"TIME":16.8659,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":346.013,"TIME":16.9269,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":168.431,"TIME":16.935,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":249.908,"TIME":16.9962,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":139.147,"TIME":17.0048,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":165.747,"TIME":17.0655,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":177.352,"TIME":17.0738,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":356.965,"TIME":17.1343,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":143.058,"TIME":17.1426,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":336.986,"TIME":17.2036,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":147.67,"TIME":17.2118,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":462.344,"TIME":17.2724,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":252.612,"TIME":17.2809,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":476.566,"TIME":17.3418,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":227.996,"TIME":17.3505,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":452.048,"TIME":17.4117,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":198.973,"TIME":17.9873,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":370.056,"TIME":18.0478,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":173.864,"TIME":18.0562,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":265.528,"TIME":18.1172,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":140.163,"TIME":18.1258,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":167.859,"TIME":18.1865,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":185.899,"TIME":18.1947,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":388.526,"TIME":18.2554,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":147.393,"TIME":18.264,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":356.303,"TIME":18.3242,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":142.506,"TIME":18.3323,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":499.889,"TIME":18.3928,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":258.876,"TIME":18.4017,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":518.554,"TIME":18.4626,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":239.857,"TIME":18.4715,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":490.675,"TIME":18.5322,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":204.265,"TIME":19.1064,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":396.19,"TIME":19.1672,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":174.951,"TIME":19.1756,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":281.147,"TIME":19.2372,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":140.163,"TIME":19.2456,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":171.026,"TIME":19.3058,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":185.899,"TIME":19.3142,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":416.822,"TIME":19.3751,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":153.896,"TIME":19.3834,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":378.841,"TIME":19.4447,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":171.421,"TIME":19.4529,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":535.289,"TIME":19.5141,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":275.577,"TIME":19.5227,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":550.045,"TIME":19.5838,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":245.129,"TIME":19.5926,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":531.391,"TIME":19.6541,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":213.79,"TIME":20.2275,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":424.414,"TIME":20.2882,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":181.471,"TIME":20.2964,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":295.65,"TIME":20.357,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":141.178,"TIME":20.366,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":173.137,"TIME":20.4266,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":198.72,"TIME":20.4348,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":445.118,"TIME":20.4962,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":163.65,"TIME":20.5045,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":406.744,"TIME":20.5654,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":162.127,"TIME":20.5735,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":578.198,"TIME":20.6338,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":284.972,"TIME":20.6424,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":600.431,"TIME":20.703,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":259.626,"TIME":20.7119,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":574.194,"TIME":20.7722,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":218.024,"TIME":21.3444,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":455.775,"TIME":21.4047,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":187.991,"TIME":21.4133,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":314.617,"TIME":21.4745,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":145.241,"TIME":21.4835,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":174.193,"TIME":21.5438,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":209.404,"TIME":21.5521,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":481.033,"TIME":21.6131,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":164.734,"TIME":21.6214,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":434.647,"TIME":21.6821,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":178.649,"TIME":21.6904,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":623.252,"TIME":21.7512,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":295.41,"TIME":21.7596,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":648.717,"TIME":21.8203,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":268.851,"TIME":21.8297,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":620.13,"TIME":21.8902,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":231.782,"TIME":22.4646,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":489.226,"TIME":22.5258,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":191.251,"TIME":22.5341,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":334.699,"TIME":22.5946,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":146.257,"TIME":22.6032,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":178.416,"TIME":22.6643,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":213.677,"TIME":22.6724,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":518.035,"TIME":22.7327,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":173.404,"TIME":22.7421,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":462.55,"TIME":22.8022,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":186.911,"TIME":22.8105,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":667.234,"TIME":22.8715,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":310.024,"TIME":22.8799,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":692.805,"TIME":22.9411,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":278.076,"TIME":22.9499,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":666.066,"TIME":23.0109,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":238.133,"TIME":23.586,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":523.723,"TIME":23.6466,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":193.424,"TIME":23.6546,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":354.781,"TIME":23.7156,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":148.288,"TIME":23.7246,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":179.472,"TIME":23.7851,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":217.951,"TIME":23.7938,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":559.391,"TIME":23.8543,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":176.655,"TIME":23.8629,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":493.673,"TIME":23.924,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":200.335,"TIME":23.9325,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":717.652,"TIME":23.9938,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":323.594,"TIME":24.0021,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":737.942,"TIME":24.0625,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":283.348,"TIME":24.0716,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":716.177,"TIME":24.1323,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":247.658,"TIME":24.7097,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":560.31,"TIME":24.7749,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":195.598,"TIME":24.7892,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":378.209,"TIME":24.855,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":149.304,"TIME":24.8699,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":181.583,"TIME":24.9354,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":230.771,"TIME":24.9459,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":596.393,"TIME":25.007,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":186.409,"TIME":25.0153,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":528.016,"TIME":25.0756,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":196.204,"TIME":25.0839,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":768.07,"TIME":25.1438,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":336.121,"TIME":25.1522,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":795.676,"TIME":25.2129,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":296.527,"TIME":25.2217,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":768.377,"TIME":25.2831,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":252.95,"TIME":25.8584,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":601.079,"TIME":25.9192,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":203.204,"TIME":25.9272,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":403.87,"TIME":25.9872,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":148.288,"TIME":25.9972,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":186.862,"TIME":26.0576,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":240.387,"TIME":26.0659,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":638.837,"TIME":26.1264,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":191.828,"TIME":26.1346,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":563.432,"TIME":26.1957,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":208.596,"TIME":26.204,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":820.633,"TIME":26.2647,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":346.559,"TIME":26.2732,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":848.161,"TIME":26.3343,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":307.07,"TIME":26.3429,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":822.664,"TIME":26.403,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":264.592,"TIME":26.9779,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":642.893,"TIME":27.0385,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":208.637,"TIME":27.0472,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":429.53,"TIME":27.108,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":150.319,"TIME":27.1167,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":190.029,"TIME":27.178,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":250.002,"TIME":27.1863,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":688.9,"TIME":27.2479,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":196.163,"TIME":27.2562,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":602.067,"TIME":27.3168,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":220.988,"TIME":27.325,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":874.269,"TIME":27.3853,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":358.042,"TIME":27.3938,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":903.795,"TIME":27.4546,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":317.613,"TIME":27.4635,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":880.084,"TIME":27.5247,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":270.942,"TIME":28.098,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":684.708,"TIME":28.1586,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":214.071,"TIME":28.167,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":459.653,"TIME":28.227,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":155.398,"TIME":28.2355,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":194.252,"TIME":28.2967,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":259.618,"TIME":28.305,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":735.697,"TIME":28.3659,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":201.582,"TIME":28.3742,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":640.702,"TIME":28.4357,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":225.119,"TIME":28.444,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":934.342,"TIME":28.5049,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":370.568,"TIME":28.5139,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":963.628,"TIME":28.5743,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":336.064,"TIME":28.5835,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":935.415,"TIME":28.6438,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":280.467,"TIME":29.2198,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":729.658,"TIME":29.2808,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":221.677,"TIME":29.2891,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":489.776,"TIME":29.3497,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":154.382,"TIME":29.3584,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":199.53,"TIME":29.4189,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":266.028,"TIME":29.427,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":784.671,"TIME":29.4875,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":210.252,"TIME":29.4965,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":682.557,"TIME":29.5579,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":239.576,"TIME":29.5662,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":991.196,"TIME":29.6269,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":386.226,"TIME":29.6352,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1018.21,"TIME":29.6957,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":342.653,"TIME":29.7046,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":993.878,"TIME":29.7653,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":293.168,"TIME":30.3395,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":778.789,"TIME":30.4051,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":226.024,"TIME":30.4138,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":524.361,"TIME":30.4743,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":155.398,"TIME":30.4834,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":204.809,"TIME":30.5444,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":277.78,"TIME":30.5528,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":840.175,"TIME":30.6134,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":218.923,"TIME":30.6217,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":726.558,"TIME":30.6826,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":249.903,"TIME":30.6914,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1052.34,"TIME":30.752,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":400.84,"TIME":30.7603,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1078.05,"TIME":30.8205,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":357.15,"TIME":30.8299,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1051.3,"TIME":30.8908,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":300.576,"TIME":31.4651,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":830.012,"TIME":31.5266,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":232.544,"TIME":31.535,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":557.831,"TIME":31.5959,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":157.429,"TIME":31.6045,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":209.032,"TIME":31.6662,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":282.054,"TIME":31.6742,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":892.413,"TIME":31.7348,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":226.509,"TIME":31.7432,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":772.706,"TIME":31.8041,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":257.131,"TIME":31.8123,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1109.2,"TIME":31.8729,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":411.278,"TIME":31.8814,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1138.93,"TIME":31.9417,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":363.74,"TIME":31.9508,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1113.94,"TIME":32.0118,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":311.16,"TIME":32.5864,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":878.098,"TIME":32.6468,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":240.15,"TIME":32.6551,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":594.648,"TIME":32.716,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":160.476,"TIME":32.725,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":214.31,"TIME":32.786,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":293.806,"TIME":32.7942,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":944.652,"TIME":32.855,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":233.012,"TIME":32.8633,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":818.854,"TIME":32.9238,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":270.556,"TIME":32.932,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1171.41,"TIME":32.9925,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":421.717,"TIME":33.0012,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1197.71,"TIME":33.0613,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":376.919,"TIME":33.0703,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1174.49,"TIME":33.1312,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":318.568,"TIME":33.7061,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":930.366,"TIME":33.7667,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":243.41,"TIME":33.775,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":634.812,"TIME":33.8356,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":160.476,"TIME":33.844,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":220.644,"TIME":33.9044,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":304.49,"TIME":33.9127,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1001.24,"TIME":33.9732,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":242.766,"TIME":33.9816,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":869.294,"TIME":34.0426,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":281.915,"TIME":34.051,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1237.92,"TIME":34.1124,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":436.331,"TIME":34.121,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1261.74,"TIME":34.181,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":383.508,"TIME":34.19,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1240.26,"TIME":34.2516,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":330.211,"TIME":34.8252,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":983.679,"TIME":34.8856,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":251.017,"TIME":34.894,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":673.86,"TIME":34.9546,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":161.492,"TIME":34.9633,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":228.034,"TIME":35.0246,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":310.9,"TIME":35.033,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1058.92,"TIME":35.0942,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":254.687,"TIME":35.1026,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":919.735,"TIME":35.163,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":290.176,"TIME":35.1715,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1301.21,"TIME":35.2315,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":451.988,"TIME":35.24,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1318.43,"TIME":35.3011,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":395.369,"TIME":35.31,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1295.59,"TIME":35.3712,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":340.794,"TIME":35.9459,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1042.22,"TIME":36.0069,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":253.19,"TIME":36.0151,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":716.255,"TIME":36.0752,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":164.539,"TIME":36.0839,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":234.369,"TIME":36.1449,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":323.721,"TIME":36.1534,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1119.87,"TIME":36.2142,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":257.938,"TIME":36.2226,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":973.395,"TIME":36.2831,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":301.535,"TIME":36.2915,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1365.58,"TIME":36.3525,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":465.558,"TIME":36.3609,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1382.46,"TIME":36.4216,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":407.23,"TIME":36.4304,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1358.23,"TIME":36.4912,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":351.378,"TIME":37.0663,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1097.62,"TIME":37.127,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":262.97,"TIME":37.1354,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":760.881,"TIME":37.1964,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":164.539,"TIME":37.2049,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":242.814,"TIME":37.266,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":332.268,"TIME":37.2743,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1178.64,"TIME":37.3349,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":267.692,"TIME":37.3439,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1027.06,"TIME":37.4043,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":312.894,"TIME":37.4128,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1428.87,"TIME":37.4736,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":479.129,"TIME":37.482,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1441.24,"TIME":37.5424,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":416.456,"TIME":37.5514,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1418.78,"TIME":37.6118,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":359.845,"TIME":38.1869,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1155.12,"TIME":38.2473,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":271.663,"TIME":38.2564,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":807.739,"TIME":38.3167,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":168.601,"TIME":38.3253,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":252.316,"TIME":38.3862,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":340.815,"TIME":38.3948,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1238.5,"TIME":38.4557,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":274.195,"TIME":38.4642,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1082.86,"TIME":38.5255,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":321.156,"TIME":38.5338,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1492.16,"TIME":38.595,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":495.83,"TIME":38.6033,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1501.08,"TIME":38.6633,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":430.953,"TIME":38.6727,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1478.29,"TIME":38.7331,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":372.545,"TIME":39.309,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1210.52,"TIME":39.3698,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":278.183,"TIME":39.378,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":857.944,"TIME":39.4389,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":172.664,"TIME":39.4482,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":260.762,"TIME":39.509,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":351.499,"TIME":39.517,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1301.62,"TIME":39.578,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":281.781,"TIME":39.5864,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1140.81,"TIME":39.6473,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":329.417,"TIME":39.6556,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1560.81,"TIME":39.716,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":503.137,"TIME":39.7247,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1563.01,"TIME":39.7855,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":446.767,"TIME":39.7945,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1535.71,"TIME":39.8553,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":381.012,"TIME":40.4326,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1270.11,"TIME":40.4931,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":284.703,"TIME":40.5014,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":905.918,"TIME":40.5625,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":174.695,"TIME":40.5711,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":270.263,"TIME":40.6319,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":364.32,"TIME":40.6401,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1363.65,"TIME":40.7011,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":292.619,"TIME":40.7093,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1200.91,"TIME":40.7699,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":346.972,"TIME":40.7782,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1623.03,"TIME":40.8387,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":520.883,"TIME":40.8477,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1619.69,"TIME":40.9084,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":454.675,"TIME":40.9175,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1594.17,"TIME":40.9781,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":394.771,"TIME":41.5526,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1328.65,"TIME":41.6136,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":293.396,"TIME":41.622,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":957.238,"TIME":41.6825,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":179.774,"TIME":41.691,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":280.82,"TIME":41.7514,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":372.867,"TIME":41.761,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1424.6,"TIME":41.8213,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":298.038,"TIME":41.8296,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1256.72,"TIME":41.8902,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":348.005,"TIME":41.8986,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1690.61,"TIME":41.9595,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":529.233,"TIME":41.9682,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1677.43,"TIME":42.029,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":470.49,"TIME":42.038,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1651.59,"TIME":42.0986,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":405.355,"TIME":42.6734,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1384.05,"TIME":42.7346,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":299.916,"TIME":42.7427,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1011.91,"TIME":42.8036,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":179.774,"TIME":42.8125,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":293.489,"TIME":42.8735,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":385.687,"TIME":42.882,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1487.72,"TIME":42.943,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":302.373,"TIME":42.9514,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1318.97,"TIME":43.0128,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":363.495,"TIME":43.0208,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1750.68,"TIME":43.081,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":543.847,"TIME":43.0966,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1735.16,"TIME":43.1614,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":482.351,"TIME":43.1766,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1705.88,"TIME":43.2406,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":413.821,"TIME":43.8231,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1447.82,"TIME":43.8838,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":307.523,"TIME":43.8919,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1067.69,"TIME":43.9525,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":184.852,"TIME":43.9612,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":305.102,"TIME":44.0223,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":400.645,"TIME":44.0305,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1545.4,"TIME":44.0908,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":317.546,"TIME":44.0994,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1377.99,"TIME":44.1598,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":373.821,"TIME":44.1683,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1809.68,"TIME":44.2294,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":557.418,"TIME":44.2378,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1790.8,"TIME":44.2986,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":494.212,"TIME":44.3075,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1757.04,"TIME":44.368,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":422.288,"TIME":44.9425,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1503.22,"TIME":45.0027,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":315.129,"TIME":45.0109,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1123.47,"TIME":45.072,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":188.915,"TIME":45.0807,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":319.882,"TIME":45.1412,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":403.85,"TIME":45.1498,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1605.26,"TIME":45.2105,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":325.132,"TIME":45.2188,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1438.09,"TIME":45.2798,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":382.082,"TIME":45.2881,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1867.61,"TIME":45.3499,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":572.031,"TIME":45.3582,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1845.38,"TIME":45.4187,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":506.073,"TIME":45.4276,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1811.32,"TIME":45.488,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":441.339,"TIME":46.0627,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1561.76,"TIME":46.1235,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":324.909,"TIME":46.1317,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1180.37,"TIME":46.1925,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":191.962,"TIME":46.2014,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":334.662,"TIME":46.2617,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":415.602,"TIME":46.2707,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1667.29,"TIME":46.3307,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":331.635,"TIME":46.3391,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1498.19,"TIME":46.3997,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":397.572,"TIME":46.4083,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1923.39,"TIME":46.469,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":584.558,"TIME":46.4776,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1894.72,"TIME":46.5384,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":519.252,"TIME":46.5473,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1856.21,"TIME":46.609,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":449.806,"TIME":47.1845,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1619.25,"TIME":47.245,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":331.429,"TIME":47.2532,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1236.15,"TIME":47.3144,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":195.009,"TIME":47.3232,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":352.609,"TIME":47.3845,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":429.491,"TIME":47.393,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1724.97,"TIME":47.4537,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":339.222,"TIME":47.462,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1555.07,"TIME":47.5228,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":407.899,"TIME":47.5309,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1975.96,"TIME":47.5918,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":598.128,"TIME":47.6002,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1943,"TIME":47.6613,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":531.113,"TIME":47.6703,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1905.28,"TIME":47.7315,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":465.681,"TIME":48.3072,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1670.48,"TIME":48.3683,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":339.036,"TIME":48.3763,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1293.05,"TIME":48.4373,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":198.056,"TIME":48.4463,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":367.389,"TIME":48.5068,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":440.175,"TIME":48.5154,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1782.65,"TIME":48.5765,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":348.976,"TIME":48.5849,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1617.32,"TIME":48.6463,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":420.291,"TIME":48.6546,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2024.23,"TIME":48.7157,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":611.698,"TIME":48.7243,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1989.19,"TIME":48.7851,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":541.656,"TIME":48.794,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1952.26,"TIME":48.8549,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":476.265,"TIME":49.4282,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1724.84,"TIME":49.4891,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":347.729,"TIME":49.4974,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1348.84,"TIME":49.558,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":204.15,"TIME":49.5667,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":387.447,"TIME":49.6278,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":452.996,"TIME":49.6363,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1830.54,"TIME":49.6969,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":360.897,"TIME":49.7052,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1674.2,"TIME":49.7658,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":436.813,"TIME":49.7743,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2076.79,"TIME":49.8346,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":624.224,"TIME":49.8439,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2029.08,"TIME":49.9052,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":556.153,"TIME":49.9141,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1989.84,"TIME":49.9749,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":487.907,"TIME":50.5485,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1780.24,"TIME":50.6094,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":355.336,"TIME":50.6173,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1405.73,"TIME":50.6778,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":205.166,"TIME":50.6865,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":407.506,"TIME":50.7471,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":463.68,"TIME":50.7556,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1884.95,"TIME":50.8162,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":363.065,"TIME":50.8246,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1731.08,"TIME":50.8859,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":449.205,"TIME":50.8945,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2123.99,"TIME":50.9555,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":639.882,"TIME":50.964,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2068.97,"TIME":51.0254,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":571.968,"TIME":51.0342,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2028.47,"TIME":51.0948,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":498.491,"TIME":51.6691,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1827.28,"TIME":51.7298,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":366.202,"TIME":51.7381,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1462.63,"TIME":51.7986,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":211.26,"TIME":51.8073,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":428.62,"TIME":51.8682,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":470.09,"TIME":51.8769,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1937.19,"TIME":51.9374,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":373.902,"TIME":51.9461,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1787.96,"TIME":52.0064,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":461.597,"TIME":52.0146,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2163.68,"TIME":52.0753,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":655.54,"TIME":52.0838,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2106.76,"TIME":52.1445,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":582.511,"TIME":52.1534,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2065.01,"TIME":52.2139,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":511.191,"TIME":52.7887,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1873.28,"TIME":52.8492,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":374.895,"TIME":52.8584,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1518.42,"TIME":52.9188,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":215.322,"TIME":52.9275,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":452.902,"TIME":52.9881,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":480.774,"TIME":52.9967,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1985.08,"TIME":53.0577,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":384.74,"TIME":53.0661,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1841.62,"TIME":53.1269,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":475.021,"TIME":53.1353,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2205.52,"TIME":53.1962,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":665.978,"TIME":53.2045,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2139.3,"TIME":53.2653,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":585.147,"TIME":53.2755,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2097.38,"TIME":53.3356,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":524.95,"TIME":53.9103,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1920.32,"TIME":53.9712,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":381.415,"TIME":53.9797,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1573.08,"TIME":54.041,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":218.369,"TIME":54.0499,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":479.295,"TIME":54.1108,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":498.936,"TIME":54.1191,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2034.05,"TIME":54.1793,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":396.662,"TIME":54.1877,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1895.28,"TIME":54.2487,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":489.478,"TIME":54.257,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2239.85,"TIME":54.3177,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":679.548,"TIME":54.3264,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2169.74,"TIME":54.3875,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":607.551,"TIME":54.3965,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2126.61,"TIME":54.4574,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":537.65,"TIME":55.0341,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1963.18,"TIME":55.0943,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":385.762,"TIME":55.1029,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1626.64,"TIME":55.1636,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":223.448,"TIME":55.1724,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":504.632,"TIME":55.2333,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":507.483,"TIME":55.2432,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2073.23,"TIME":55.3039,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":405.332,"TIME":55.3124,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1943.57,"TIME":55.3731,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":506.001,"TIME":55.3814,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2279.54,"TIME":55.4425,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":689.987,"TIME":55.4515,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2202.28,"TIME":55.5115,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":623.366,"TIME":55.5205,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2155.84,"TIME":55.5805,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":544.001,"TIME":56.1535,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2003.95,"TIME":56.214,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":397.715,"TIME":56.2222,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1679.07,"TIME":56.2824,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":227.51,"TIME":56.2907,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":535.248,"TIME":56.3508,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":517.099,"TIME":56.3593,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2112.41,"TIME":56.4195,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":415.086,"TIME":56.4279,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1992.94,"TIME":56.4883,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":511.164,"TIME":56.4966,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2303.14,"TIME":56.5573,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":706.688,"TIME":56.5658,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2224.32,"TIME":56.6257,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":633.909,"TIME":56.6349,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2182.98,"TIME":56.6953,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":557.759,"TIME":57.2672,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2041.58,"TIME":57.3274,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":408.582,"TIME":57.3358,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1729.28,"TIME":57.396,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":233.604,"TIME":57.4046,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":562.696,"TIME":57.4647,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":533.125,"TIME":57.473,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2142.88,"TIME":57.5335,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":424.84,"TIME":57.5418,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2039.09,"TIME":57.6015,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":525.621,"TIME":57.61,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2331.03,"TIME":57.6702,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":718.171,"TIME":57.6788,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2248.47,"TIME":57.7391,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":647.088,"TIME":57.748,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2198.64,"TIME":57.8084,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":571.518,"TIME":58.3822,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2072.94,"TIME":58.4437,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":415.101,"TIME":58.4519,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1781.71,"TIME":58.512,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":241.73,"TIME":58.5209,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":596.479,"TIME":58.5813,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":542.74,"TIME":58.5897,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2183.15,"TIME":58.6503,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":432.426,"TIME":58.6586,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2082.01,"TIME":58.7191,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":541.111,"TIME":58.7276,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2357.85,"TIME":58.7886,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":735.916,"TIME":58.7974,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2267.36,"TIME":58.8582,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":660.267,"TIME":58.8671,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2220.57,"TIME":58.9275,"TUBE":8},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":585.277,"TIME":59.5013,"TUBE":1},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2106.39,"TIME":59.5618,"TUBE":1},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":421.621,"TIME":59.5701,"TUBE":2},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":1825.22,"TIME":59.6304,"TUBE":2},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":243.761,"TIME":59.6395,"TUBE":3},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":629.206,"TIME":59.7032,"TUBE":3},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":552.356,"TIME":59.7112,"TUBE":4},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2212.53,"TIME":59.7717,"TUBE":4},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":438.929,"TIME":59.7805,"TUBE":5},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2121.72,"TIME":59.84,"TUBE":5},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":545.242,"TIME":59.8484,"TUBE":6},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2379.3,"TIME":59.9094,"TUBE":6},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":750.53,"TIME":59.918,"TUBE":7},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2289.4,"TIME":59.9789,"TUBE":7},{"CHANNEL":2,"NAME":"Wild Fly","SIGNAL":676.082,"TIME":59.9877,"TUBE":8},{"CHANNEL":3,"NAME":"GSS Female","SIGNAL":2241.45,"TIME":60.0489,"TUBE":8}];
+    var f;
+
+    const sticky2 = d3.select("#chart svg")
+      .append("g")
+        .attr("class","tooltipexact")
+        .style("opacity", "0.0");
+    const sticky2Span = sticky2
+      .append("text")
+        .attr("class","tooltiptext")
+        .attr("dy","-1em")
+        .attr("text-anchor","end")
+      .text("");
+    const tooltip2 = d3.select("#chart svg")
+      .append("g")
+        .attr("class","tooltipexact")
+        .style("opacity", "0.0");
+    const tooltip2Span = tooltip2
+      .append("text")
+        .attr("class","tooltiptext")
+        .attr("dy","-1em")
+        .attr("text-anchor","end")
+      .text("");
+
+    dyenames = [
+        [false, false, false, false, false],
+        [false, "", "", "", ""], // tube 1
+        [false, "", "", "", ""],
+        [false, "", "", "", ""],
+        [false, "", "", "", ""],
+        [false, "", "", "", ""],
+        [false, "", "", "", ""],
+        [false, "", "", "", ""],
+        [false, "", "", "", ""]  // tube 8
+    ]; // placeholder structure
+
+    // gather all the dye names for all tubes
+    dyemap = d3.map();
+    q.forEach(function(d) {
+        // could test if there's a naming conflict, throw error to user
+        dyenames[tubes(d)][dyes(d)] = dyes(d)+names(d);
+        dyemap.set(dyes(d)+names(d),dyes(d));
+    });
+
+    var splt;
+    var score;
+
+    score = document.getElementById("score");
+    splt=["Tube 1\nID DTWP_Male_1_KF_1\n<ul style='background:#f9f9f9;'>\n<li style='background:#f9f9f9;'>Genotype</li>\n<li style='background:#f9f9f9;'>Dorsalis: GSS Female (N/A)</li>\n</ul>\n","Tube 2\nID DTWP_Male_1_KF_2\n<ul style='background:#f9f9f9;'>\n<li style='background:#f9f9f9;'>Genotype</li>\n<li style='background:#f9f9f9;'>Dorsalis: GSS Female (N/A)</li>\n</ul>\n","Tube 3\nID DTWP_Male_1_KF_3\n<ul style='background:#f9f9f9;'>\n<li style='background:#f9f9f9;'>Genotype</li>\n<li style='background:#f9f9f9;'>Dorsalis: GSS Female (N/A)</li>\n</ul>\n","Tube 4\nID DTWP_Male_1_KF_4\n<ul style='background:#f9f9f9;'>\n<li style='background:#f9f9f9;'>Genotype</li>\n<li style='background:#f9f9f9;'>Dorsalis: GSS Female (N/A)</li>\n</ul>\n","Tube 5\nID DTWP_Male_1_KF_5\n<ul style='background:#f9f9f9;'>\n<li style='background:#f9f9f9;'>Genotype</li>\n<li style='background:#f9f9f9;'>Dorsalis: GSS Female (N/A)</li>\n</ul>\n","Tube 6\nID DTWP_Male_1_KF_6\n<ul style='background:#f9f9f9;'>\n<li style='background:#f9f9f9;'>Genotype</li>\n<li style='background:#f9f9f9;'>Dorsalis: GSS Male (N/A)</li>\n</ul>\n","Tube 7\nID DTWP_Male_1_KF_7\n<ul style='background:#f9f9f9;'>\n<li style='background:#f9f9f9;'>Genotype</li>\n<li style='background:#f9f9f9;'>Dorsalis: GSS Female (N/A)</li>\n</ul>\n","Tube 8\nID DTWP_Male_1_KF_8\n<ul style='background:#f9f9f9;'>\n<li style='background:#f9f9f9;'>Genotype</li>\n<li style='background:#f9f9f9;'>Dorsalis: GSS Female (N/A)</li>\n</ul>\n"];
+    
+
+    var nav = d3.select("#navbar").selectAll("li");
+    nav.on("mouseover", handleMouseOver)
+        .on("mouseout", handleMouseOut)
+        .on("click", handleMouseOver) // toggle, make big/small and orange
+        .on("dblclick", handleMouseOver );
+
+    function buildFilter( query ) {
+        // these checkboxes track the state of which tubes are displayed
+        // they are intentionally hidden from the user
+        var filter = d3.select("#filter");
+        var div = filter
+          .append("div")
+            .style("display", "none") // or "block" to see (debug)
+            .style("margin-top", "350px")
+            .style("margin-left", "100px");
+        // hover/display state tn
+        var theData = TUBEList;
+        div.append("span").selectAll("input")
+          .data(theData).enter()
+          .append("input")
+            .attr("id", d => "t"+d )
+            .attr("type", "checkbox" )
+            .property("checked", d => isEmpty(query) ? (d == lastHovered) : ( query['t'+d] == 1 ));
+        // locked display state (both tn and ltn checked)
+    };
+//    buildFilter( query );
+
+    function buildDropdowns( dyeNames, dyeQuery ) {
+        var allTubes = TUBEList;
+        if (samples) {
+            allTubes.length = samples.length;
+        };
+        for (var j of allTubes) {
+            var dd = d3.select("#dd"+j);
+            if( !dd ) {
+                break;
+            };
+            // special case
+            dd.style("display", null);
+            dd.selectAll("*").remove();
+            for (var k of DYEList) {
+                var name=dyeNames[j][k].substring(1);
+                dd
+                  .append("label")
+                    .classed("cb-container noselect", true )
+                    .classed("dot"+k, true )
+                    .style("display", "none") // suppress these checkboxes
+                  .html(name+"<span class=checkmark></span>")
+                  .insert("input","span")
+                    .attr("id", 't'+j+'d'+k )
+                    .attr("name", "dp" )
+                    .attr("type", "checkbox" )
+//                    .property("checked", (dyeNames[j][k] != "")); // name, default checked
+                    .property("checked", (dyeQuery[dyeNames[j][k]] != '0'));
+            };
+            if (!isEmpty(splt)) {
+                var elt = dd.append("pre").append("b");
+                elt.html(splt[j-1]);
+            };
+        };
+        var dd0 = d3.select("#dd0");
+        let ul;
+        var ulli;
+        if (notLive) {
+            dd0.selectAll("*").remove();
+            ul = dd0
+              .append("ul").classed("vert", true );
+            ulli = ul
+              .append("li").classed("dropdown-submenu", true);
+        } else {
+            ul = dd0.append("ul").classed("vert", true );
+            ul
+              .append("li")
+              .append( "a" )
+                .classed("active", true )
+                .attr( "href", ".." )
+              .html( "<u>B</u>ACK" );
+            ul
+              .append("li")
+              .append( "a" )
+                .classed("active", true )
+                .attr( "href", "data/" )
+              .html( "<u>D</u>ATA" );
+            ulli = ul.append("li").classed("dropdown-submenu", true);
+        };
+
+        rescaleToggle = function rescaleToggle() {
+            const toggle = document.getElementById("myonoffswitch")
+            autoRescale = !autoRescale;
+            toggle.checked = autoRescale;
+            setCookie("r", autoRescale ? "1" : "0");
+            rescaleGraphForce();
+        };
+
+        ulli
+          .append( "a" )
+            .attr("id", "rescale")
+            .classed("active", true )
+            .style("cursor", "pointer" )
+            .on("click", rescaleToggle)
+          .html( "<u>R</u>ESCALE" );
+
+        const resc = document.getElementById("rescale");
+        resc.addEventListener("touchstart", function(e) {
+            d3.select("#rescale").style("background-color", "#a6192e");
+        });
+        resc.addEventListener("touchend", function(e) {
+            d3.select("#rescale").style("background-color", "#4CAF50");
+        });
+
+        var ullidiv = ulli
+          .append("ul")
+            .classed("dropdown-menu", true)
+          .append("li")
+          .append("div")
+            .classed( "onoffswitch", true );
+        ullidiv
+          .append("input")
+            .attr("type","checkbox")
+            .attr("name","myonoffswitch")
+            .attr("id","myonoffswitch")
+            .property("checked", autoRescale )
+            .on("change", function() {
+                autoRescale = this.checked;
+                setCookie("r", autoRescale ? "1" : "0");
+                rescaleGraphForce();
+            })
+            .classed("onoffswitch-checkbox", true);
+        ullidiv
+          .append("label")
+            .classed("onoffswitch-label", true)
+            .attr("for","myonoffswitch")
+          .html('<span class="onoffswitch-switch"></span>')
+          .insert("span", "span")
+            .classed("onoffswitch-inner", true);
+
+        greyToggle = function greyToggle() {
+            const toggle = document.getElementById("greyonoffswitch")
+            noGrey = !noGrey;
+            toggle.checked = !noGrey;
+            setCookie("g", noGrey ? "1" : "0");
+            cktube(lastHovered, true);
+            handleMouseOver(null, lastHovered+1);
+        };
+
+        ulli = ul
+          .append("li")
+            .classed("dropdown-submenu", true);
+        ulli
+          .append( "a" )
+            .attr("id", "grey")
+            .classed("active", true )
+            .style("cursor", "pointer" )
+            .on("click", greyToggle)
+          .html( "<u>G</u>REY" );
+
+        ullidiv = ulli
+          .append("ul")
+            .classed("dropdown-menu", true)
+          .append("li")
+          .append("div")
+            .classed( "onoffswitch", true );
+
+        ullidiv
+          .append("input")
+            .attr("type","checkbox")
+            .attr("name","greyonoffswitch")
+            .attr("id","greyonoffswitch")
+            .property("checked", !noGrey )
+            .on("change", function() {
+                noGrey = !this.checked;
+                setCookie("g", noGrey ? "1" : "0");
+                cktube(lastHovered, true);
+                handleMouseOver(null, lastHovered+1);
+            })
+            .classed("onoffswitch-checkbox", true);
+        ullidiv
+          .append("label")
+            .classed("onoffswitch-label", true)
+            .attr("for","greyonoffswitch")
+          .html('<span class="onoffswitch-switch"></span>')
+          .insert("span", "span")
+            .classed("onoffswitch-inner", true);
+
+        scoreToggle = function scoreToggle() {
+            const toggle = document.getElementById("scoreonoffswitch")
+            const printScore = document.getElementById("print");
+            const scoreonoff = document.getElementById("scoreonoffswitch");
+            if (scoreonoff) {
+                scoreonoff.checked = printScore.textContent != "";
+            };
+            let style;
+            if (printScore.textContent == "") {
+                style = "#printscore { display: block !important; }";
+            } else {
+                style = "";
+            };
+            printScore.textContent = style;
+            noScore = style == "";
+            toggle.checked = !noScore;
+            setCookie('p', noScore ? "1" : "0");
+        };
+
+        ulli = ul
+          .append("li")
+            .classed("dropdown-submenu", true);
+        ulli
+          .append( "a" )
+            .attr("id", "scoreSwitch")
+            .classed("active", true )
+            .style("cursor", "pointer" )
+            .on("click", scoreToggle)
+          .html( "<u>S</u>CORE" );
+
+        ullidiv = ulli
+          .append("ul")
+            .classed("dropdown-menu", true)
+          .append("li")
+          .append("div")
+            .classed( "onoffswitch", true );
+
+        ullidiv
+          .append("input")
+            .attr("type","checkbox")
+            .attr("name","scoreonoffswitch")
+            .attr("id","scoreonoffswitch")
+            .property("checked", !noScore )
+            .on("change", function() {
+                noScore = !this.checked;
+                setCookie('p', noScore ? "1" : "0");
+            })
+            .classed("onoffswitch-checkbox", true);
+        ullidiv
+          .append("label")
+            .classed("onoffswitch-label", true)
+            .attr("for","scoreonoffswitch")
+          .html('<span class="onoffswitch-switch"></span>')
+          .insert("span", "span")
+            .classed("onoffswitch-inner", true);
+
+        if (!noScore) { scoreToggle(); };
+
+        // FIT
+        if (f) {
+            /* if (!isMobile) */ {
+                var newRow = document.createElement("tr");
+                var newHead = document.createElement("th");
+                var newData = document.createElement("td");
+                var textnode1 = document.createTextNode("F");
+                var textnode2 = document.createTextNode("Toggle display of fit curves");
+                newHead.appendChild(textnode1);
+                newData.appendChild(textnode2);
+                newRow.appendChild(newHead);
+                newRow.appendChild(newData);
+                var helptbody = document.getElementById("helptbody");
+                helptbody.insertBefore(newRow, helptbody.lastElementChild);
+
+                fitToggle = function fitToggle() {
+                    const toggle = document.getElementById("fitonoffswitch")
+                    showFit = !showFit;
+                    toggle.checked = showFit;
+                    setCookie('f', showFit ? "1" : "0");
+                    cktube(lastHovered, true);
+                    handleMouseOver(null, lastHovered+1);
+                };
+
+                ulli = ul
+                  .append("li")
+                    .classed("dropdown-submenu", true);
+                ulli
+                  .append( "a" )
+                    .attr("id", "fitSwitch")
+                    .classed("active", true )
+                    .style("cursor", "pointer" )
+                    .on("click", fitToggle)
+                  .html( "<u>F</u>IT" );
+
+                ullidiv = ulli
+                  .append("ul")
+                    .classed("dropdown-menu", true)
+                  .append("li")
+                  .append("div")
+                    .classed( "onoffswitch", true );
+
+                ullidiv
+                  .append("input")
+                    .attr("type","checkbox")
+                    .attr("name","fitonoffswitch")
+                    .attr("id","fitonoffswitch")
+                    .property("checked", showFit )
+                    .on("change", function() {
+                        showFit = !this.checked;
+                        setCookie('f', showFit ? "1" : "0");
+                    })
+                    .classed("onoffswitch-checkbox", true);
+                ullidiv
+                  .append("label")
+                    .classed("onoffswitch-label", true)
+                    .attr("for","fitonoffswitch")
+                  .html('<span class="onoffswitch-switch"></span>')
+                  .insert("span", "span")
+                    .classed("onoffswitch-inner", true);
+            };
+        };
+
+        axisToggle = function axisToggle() {
+            const toggle = document.getElementById("axisonoffswitch")
+            yAxisSide = (yAxisSide == "left") ? "right" : "left";
+            toggle.checked = (yAxisSide == "right");
+            if (yAxisSide == "left") {
+                d3.select(".y" ).style("visibility", "visible");
+                d3.select(".y2").style("visibility", "hidden");
+            };
+            if (yAxisSide == "right") {
+                d3.select(".y" ).style("visibility", "hidden");
+                d3.select(".y2").style("visibility", "visible");
+            };
+            if (yAxisSide == "left") {
+                margin = {
+                    top: 10,
+                    right: -40,
+                    bottom: 40,
+                    left: 60
+                };
+            } else if (yAxisSide == "right") {
+                margin = {
+                    top: 10,
+                    right: 0,
+                    bottom: 40,
+                    left: 30
+                };
+            };
+            d3.select("#graph")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            setCookie('s', yAxisSide );
+//            cktube(lastHovered, true);
+//            handleMouseOver(null, lastHovered+1);
+        };
+
+        ulli = ul
+          .append("li")
+            .classed("dropdown-submenu", true);
+        ulli
+          .append( "a" )
+            .attr("id", "axisSwitch")
+            .classed("active", true )
+            .style("cursor", "pointer" )
+            .on("click", axisToggle)
+          .html( "<u>A</u>XIS" );
+
+        ullidiv = ulli
+          .append("ul")
+            .classed("dropdown-menu", true)
+          .append("li")
+          .append("div")
+            .classed( "onoffswitch", true );
+
+        ullidiv
+          .append("input")
+            .attr("type","checkbox")
+            .attr("name","axisonoffswitch")
+            .attr("id","axisonoffswitch")
+            .property("checked", (yAxisSide == "right"))
+            .on("change", function() {
+                axisToggle();
+            })
+            .classed("onoffswitch-checkbox", true);
+        ullidiv
+          .append("label")
+            .classed("onoffswitch-label", true)
+            .attr("for","axisonoffswitch")
+          .html('<span class="onoffswitch-switch"></span>')
+          .insert("span", "span")
+            .classed("leftrightswitch-inner", true);
+
+        mobileToggle = function mobileToggle() {
+            const toggle = document.getElementById("mobileonoffswitch")
+            isMobile = !isMobile;
+            toggle.checked = isMobile;
+            setCookie('m', isMobile ? "1" : "0");
+            const gRect = d3.select("#gRect");
+            if (isMobile) { gRect.raise(); } else { gRect.lower() };
+            clearSticky();
+            refresh();
+//            doRefresh();
+        };
+
+        ulli = ul
+          .append("li")
+            .classed("dropdown-submenu", true);
+        ulli
+          .append( "a" )
+            .attr("id", "mobile")
+            .classed("active", true )
+            .style("cursor", "pointer" )
+            .on("click", mobileToggle)
+          .html( "<u>M</u>OBILE" );
+
+        ullidiv = ulli
+          .append("ul")
+            .classed("dropdown-menu", true)
+          .append("li")
+          .append("div")
+            .classed( "onoffswitch", true );
+
+        ullidiv
+          .append("input")
+            .attr("type","checkbox")
+            .attr("name","mobileonoffswitch")
+            .attr("id","mobileonoffswitch")
+            .property("checked", isMobile )
+            .on("change", function() {
+                isMobile = this.checked;
+                setCookie('m', isMobile ? "1" : "0");
+                // doRefresh();
+            })
+            .classed("onoffswitch-checkbox", true);
+        ullidiv
+          .append("label")
+            .classed("onoffswitch-label", true)
+            .attr("for","mobileonoffswitch")
+          .html('<span class="onoffswitch-switch"></span>')
+          .insert("span", "span")
+            .classed("onoffswitch-inner", true);
+
+        d3.selectAll(".onoffswitch-switch") // butterfly switch
+            .style("background", "#333333 url(" + butterfly +") no-repeat center center");
+        ul
+          .append("a")
+            .classed("active", true)
+            .style("cursor", "pointer")
+            .on("click", help)
+          .html("<u>H</u>ELP");
+    };
+    window.onload = function() {
+	    /*
+        lastHovered = 1;
+        let option = getCookie("h");
+        if (option) {
+            if (+option) {
+                lastHovered = +option;
+            };
+            firstHovered = lastHovered;
+        };
+        isHovered=true;
+	    */
+        buildFilter(query);
+        buildDropdowns( dyenames, dyeQuery );
+        buildLegend(dyemap, dyenames);
+        setTubes();
+        cktube(lastHovered, true);
+        handleMouseOver(null, lastHovered+1);
+    };
+
+    xScale.domain([d3.min(q, xValue), 1 + d3.max(q, xValue)]);
+    yScale.domain([d3.min(q, signals) - 50, 50 + d3.max(q, signals)]);
+    xScale.domain([0, xScale.domain()[1] > 1+testDuration ? xScale.domain()[1] : 1+testDuration ]);
+    if( yScale.domain()[0] < 0 ) {
+        yScale.domain([0, yScale.domain()[1]]);
+    };
+
+    svg
+      .append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")") // place x axis on the bottom
+      .call(xAxis)
+      .append("text")
+        .attr("class", "label")
+        .attr("x", width / 2)
+        .attr("y", 50)
+        .style("font-size", "16pt")
+        .style("text-anchor", "middle").text("Time (minutes)");
+
+    const leftaxis = svg
+      .append("g")
+         .attr("class", "y axis")
+      .call(yAxis);
+    const rightaxis = svg
+      .append("g")
+        .attr("class", "y2 axis")
+        .attr("transform", "translate("+width+",0)")
+      .call(y2Axis);
+    if (yAxisSide == "left" ) {
+        rightaxis.style("visibility", "hidden");
+    } else if (yAxisSide == "right" ) {
+        leftaxis.style("visibility", "hidden");
+    } else if (yAxisSide != "both" ) { // "none"
+        leftaxis.style("visibility", "hidden");
+        rightaxis.style("visibility", "hidden");
+    };
+    let dots;
+    let circles;
+
+    /* if (isMobile) */ {
+        var mline = d3.line().x(d => xMap(d)).y(d => sigMap(d)).curve(d3.curveNatural);
+        var mlinesEnter = svg.append('g').attr("id","ismobile").attr("class", "lines");
+        for (var j of TUBEList) {
+            for (var k of DYEList) {
+                mlinesEnter
+                  .append('g')
+                    .attr('id', 't'+j+'c'+k)
+                    .attr('class', 'line')
+                    .attr("display", j==lastHovered ? "inline" : "none")
+                  .data([q.filter( d => tubes(d)==j && dyes(d)==k )])
+                    .append('path').attr('class', 'line'+k).attr('d', d => mline(d));
+            };
+        };
+	if (f) { // FIT
+            var fline = d3.line().x(d => xMap(d)).y(d => sigMap(d)).curve(d3.curveLinear);
+            for (var j of TUBEList) {
+                for (var k of DYEList) {
+                    mlinesEnter
+                      .append('g')
+                        .attr('id', 'mft'+j+'c'+k)
+                        .attr('class', 'line')
+                        .attr("display", j==lastHovered ? "inline" : "none")
+                      .data([f.filter( d => tubes(d)==j && dyes(d)==k )])
+                        .append('path').attr('class', 'fit line'+k).attr('d', d => fline(d));
+                };
+            };
+        };
+    } /*else*/ {
+        var flinesEnter = svg.append('g').attr("id","notmobile").attr("class", "lines");
+	if (f) { // FIT
+            var fline = d3.line().x(d => xMap(d)).y(d => sigMap(d)).curve(d3.curveNatural);
+            for (var j of TUBEList) {
+                for (var k of DYEList) {
+                    flinesEnter
+                      .append('g')
+                        .attr('id', 'ft'+j+'c'+k)
+                        .attr('class', 'line')
+                        .attr("display", j==lastHovered ? "inline" : "none")
+                      .data([f.filter( d => tubes(d)==j && dyes(d)==k )])
+                        .append('path').attr('class', 'fit line'+k).attr('d', d => fline(d));
+                };
+            };
+        };
+        // .dot1 corresponds to channel 1 (dye 488, blue), .dot2 corresponds to channel 2, and so on
+//        dots = svg.append("g").classed("dots", true).selectAll(".dot");
+	dots = flinesEnter.selectAll(".dot");
+        dotsEnter = dots
+          .data(q).enter()
+          .append("g")
+            .classed( "dot", true )
+            .attr("transform", d => "translate("+xMap(d)+","+sigMap(d)+")");
+
+        circles = dotsEnter
+          .append("circle")
+            .attr( "class", d => "dot" + dyes(d) + " tube" + tubes(d))
+            .attr( "r", 8 );
+        const numbers = dotsEnter
+          .append("text")
+          .text(d => tubes(d))
+            .attr("dx", -4).attr("dy", 4) // fudge to center number in circle
+            .style("fill", "white");
+    };
+
+    const hdot = svg
+      .append("g")
+        .classed("tooltipexact", true)
+        .style("position", "relative")
+        .style("fill", "black")
+        .attr("display", "none");
+    hdot
+      .append("circle")
+        .attr("r", 4.5);
+    hdot
+      .append("text")
+        .style("font", "10pt sans-serif")
+        .attr("text-anchor", "end")
+        .attr("y", -8);
+    const sdot = svg
+      .append("g")
+        .classed("tooltipexact", true)
+        .style("position", "relative")
+        .style("fill", "black")
+        .attr("display", "none");
+    sdot
+      .append("circle")
+        .attr("r", 4.5);
+    sdot
+      .append("text")
+        .style("font", "10pt sans-serif")
+        .attr("text-anchor", "end")
+        .attr("y", -8);
+
+    if (isMobile) {
+        d3.select("#gRect").raise();
+    };
+    d3.select("#gRect").call(datumHover);
+
+    var el = document.getElementById('transpRect');
+    swipe = function swipe(swipedir) {
+        // swipedir contains one of "none", "left", "right", "up", or "down"
+        var nextHovered;
+        switch( swipedir ) {
+          case "left":
+            nextHovered=lastHovered+1;
+            break;
+          case "right":
+            nextHovered=lastHovered-1;
+            break;
+          case "none":
+//            rescaleGraphForce();
+//            refresh();
+//            document.getElementById('d'+lastHovered).blur();
+          default:
+            return;
+        };
+        // if out of range of tubes, wrap around
+        if (nextHovered < 1) {
+            nextHovered = samples ? samples.length : 8;
+        };
+        if (nextHovered > (samples ? samples.length : 8)) {
+            nextHovered = 1;
+        };
+        cktube(lastHovered, false);
+        handleMouseOut(null, lastHovered+1);
+        cktube(nextHovered, true); // lastHovered becomes nextHovered
+        handleMouseOver(null, nextHovered+1);
+        tooltip.transition().duration(dur).style("opacity", 0.0);
+        horizontalLine.transition().attr("opacity", 0);
+        verticalLine.transition().attr("opacity", 0);
+        clearSticky();
+    };
+
+    swipedetect(el, swipe);
+
+    function keypress(k) {
+        function checkOrLock(tube) {
+            if (samples && tube > samples.length) {
+                return;
+            };
+            if (lastHovered != tube) {
+                cktube( tube, true );
+            } else {
+                lktube(tube);
+            };
+        };
+
+        if( k.ctrlKey || k.altKey || k.metaKey || k.shiftKey || k.repeat ) { return; };
+
+        switch(k.key) {
+          case "1": checkOrLock(1); break;
+          case "2": checkOrLock(2); break;
+          case "3": checkOrLock(3); break;
+          case "4": checkOrLock(4); break;
+          case "5": checkOrLock(5); break;
+          case "6": checkOrLock(6); break;
+          case "7": checkOrLock(7); break;
+          case "8": checkOrLock(8); break;
+
+          case "0": ulktube(lastHovered); break;
+
+          case " ": lktube(lastHovered); break;
+
+          case "ArrowUp": case "ArrowDown":
+            let checking = k.key == "ArrowUp"; // Up == checking, Down == clearing
+            for (let j of TUBEList) {
+                const nav = document.getElementById('nav' + j);
+                if (!nav) {
+                    break;
+                };
+                const cb = document.getElementById("t" + j);
+                const cb2 = document.getElementById("lt" + j);
+                if( !cb || !cb2 ) {
+                    break;
+                };
+                cb2.checked = checking;
+                cb.checked = checking;
+                nav.style.color = cb2.checked ? "orange" : "white";
+            };
+            if (!checking) {
+                // if we're unchecking everything, the lastHovered tube MUST be hovered
+                // consequence: when checking again, the lastHovered tube REMAINS hovered
+                cktube(lastHovered, true);
+                firstHovered = 0;
+            };
+            setTubeCookie();
+            rescaleGraph();
+            break;
+
+          case "n": case "ArrowRight": swipe("left");  break;
+          case "p": case "ArrowLeft":  swipe("right"); break;
+
+          case "Home": case "PageUp":   cktube(1, true); break;
+          case "End":  case "PageDown": cktube(samples ? samples.length : 8, true); break;
+
+          case "b": window.location.assign("../"); break;
+          case "d": window.location.assign("data/"); break;
+          case "r":
+            rescaleToggle();
+            break;
+          case "g":
+            greyToggle();
+            return;
+          case "m":
+            mobileToggle();
+            return;
+          case "s":
+            scoreToggle();
+            return;
+          case "a":
+            axisToggle();
+            return;
+          case "f": // FIT
+            if (f) {
+                fitToggle();
+            };
+            return;
+          case "h":
+            help();
+            return;
+          case "c":
+            d3.select("#cookie").text(document.cookie);
+            const Alert = d3.select("#alert");
+            Alert.classed("active", !Alert.classed("active"));
+            return;
+          case "k":
+            if (confirm("Really clear my cookies?")) {
+                clearAllCookies();
+            };
+            return;
+
+          default: return;
+        };
+        handleMouse(null, lastHovered+1, isHovered);
+    };
+
+    document.getElementById("body").addEventListener("keydown", keypress );
+    document.body.focus();
+
+    // ,,consider template strings instead of "ham" + "eggs". (freecodecamp.org and google js style guide)
+    function tooltipText(d) {
+        return "<b>" + signals(d) + "AU</b>&nbsp;&nbsp;" +
+//            ( samples ? samples[tubes(d)-1].id : tubes(d) ) +
+//            "&nbsp;&nbsp;(" + names(d) + ")&nbsp;&nbsp;" +
+            parseFloat(d[tim]).toFixed(1) + "min";
+    };
+    function tooltip2Text(d) {
+        return signals(d) + "AU  " +
+//            ( samples ? samples[tubes(d)-1].id : tubes(d) ) +
+//            "  (" + names(d) + ")  " +
+            parseFloat(d[tim]).toFixed(1) + "min";
+    };
+    /* if (!isMobile) */ {
+        dotsEnter
+            .on("mouseout", function(d) {
+                tooltip2Span.text("");
+                tooltip.transition().duration(dur).style("opacity", 0.0);
+                horizontalLine.transition().attr("opacity", 0);
+                verticalLine.transition().attr("opacity", 0);
+            })
+            .on("mouseover", function(d) {
+//                tooltip2.style("opacity","1.0").style("color","white");
+                var tooltip2Parent = tooltip2.node().parentElement;
+                var tooltipMatrix = this.getTransformToElement(tooltip2Parent)
+                    .translate(+this.getAttribute("cx"), +this.getAttribute("cy"));
+                tooltip2.attr("transform", "translate(" + (tooltipMatrix.e) + "," + (tooltipMatrix.f) + ")");
+
+                tooltip2Span.text(function() {
+                    var tip = tooltip2Text(d);
+                    if (stickySignal) {
+                        var delta = signals(d) - stickySignal;
+                        tip += ", delta= " + delta.toFixed(0);
+                    };
+                    return tip;
+                });
+
+                tooltipSpan.html(function() {
+                    var tip = tooltipText(d);
+                    if (stickySignal) {
+                        var delta = signals(d) - stickySignal;
+                        tip += ", delta= " + delta.toFixed(0);
+                    };
+                    return tip;
+                });
+                nonstickyDot = d;
+                nonstickyThis = this;
+                var rect=this.getBoundingClientRect();
+                tooltip.transition()
+                    .style("opacity", 1.0 )
+                    .style("left", rect.left + "px")
+                    .style("top", rect.top + "px");
+                if (rect.left*2 < window.innerWidth)
+                {
+                    tooltipSpan.classed("right", true);
+                    tooltip2Span.style("text-anchor", "start" ).attr("dy","1em");
+                } else {
+                    tooltipSpan.classed("right", false);
+                    tooltip2Span.style("text-anchor", "end" ).attr("dy","-1em");
+                };
+                horizontalLine.transition()
+                    .attr("y1", yScale(signals(d)))
+                    .attr("y2", yScale(signals(d)))
+                    .attr("opacity", 1);
+                verticalLine.transition()
+                    .attr("x1", xScale(xValue(d)))
+                    .attr("x2", xScale(xValue(d)))
+                    .attr("opacity", 1);
+            })
+            .on("click", function(d) {
+//                sticky2.style("opacity","1.0").style("color","white");
+                var sticky2Parent = sticky2.node().parentElement;
+                var stickyMatrix = this.getTransformToElement(sticky2Parent)
+                    .translate(+this.getAttribute("cx"), +this.getAttribute("cy"));
+                sticky2.attr("transform", "translate(" + (stickyMatrix.e) + "," + (stickyMatrix.f) + ")");
+                sticky2Span.text( tooltip2Text(d) );
+                tooltip2.transition().style("opacity", 0.0);
+
+                tooltip.transition().style("opacity", 0.0);
+                stickySignal = signals(d);
+                stickyTime = xValue(d);
+                stickyDot = d;
+                stickyThis = this;
+                stickySpan.html( tooltipText(d) );
+                var rect=this.getBoundingClientRect();
+                sticky.transition().style("opacity", 1.0)
+                    .style("left", rect.left + "px")
+                    .style("top", rect.top + "px");
+                if( rect.left*2 < window.innerWidth )
+                {
+                    stickySpan.classed("right", true);
+                    sticky2Span.style("text-anchor", "start" ).attr("dy","1em");
+                } else {
+                    stickySpan.classed("right", false);
+                    sticky2Span.style("text-anchor", "end" ).attr("dy","-1em");
+                };
+                stickyHorizontalLine.transition()
+                    .attr("y1", yScale(signals(d)))
+                    .attr("y2", yScale(signals(d)))
+                    .attr("opacity", 1);
+                stickyVerticalLine.transition()
+                    .attr("x1", xScale(xValue(d)))
+                    .attr("x2", xScale(xValue(d)))
+                    .attr("opacity", 1);
+            })
+            .on("dblclick", clearSticky );
+    };
+
+    if (!isHovered) {
+        handleMouseOut(null, lastHovered+1);
+    } else {
+        handleMouseOver(null, lastHovered+1);
+    };
+    if (isEmpty(query)) {
+        d3.select("#d"+lastHovered).style("background-color", "#a6192e" );
+        menuWithFocus.focus();
+    };
+
+    var legendWidth;
+    if( !legendHidden ) {
+        legendWidth = d3.select("#legend").style('width');
+    };
+
+    function legendShowHide() {
+        legendHidden = !legendHidden;
+        var legend = d3.select('#legend');
+        legend.style('width', legendHidden ? '20px' : legendWidth )
+          .selectAll('div')
+            .style('display', legendHidden ? 'none' : 'block');
+    };
+
+    function tubeStates(name) {
+        var states = [false];
+        for (var k in samples) {
+            var kk = +k + 1;
+            const namekk = document.getElementById(name+kk);
+            if (namekk) {
+                states.push(namekk.checked);
+            };
+        };
+        return states;
+    };
+
+    function visTubeCount() {
+        var states = tubeStates("lt");
+        var i = 0;
+        for (var k in states) {
+            if (states[k]) { i++; };
+        };
+        if (i == 0) {
+            return 1; // if no tubes are locked, only one hovered tube is visible
+        };
+        return i;
+    };
+
+    function tubesAndDyes() {
+        // gather the state of the checkboxes
+        var tds = [
+            [false, false, false, false, false],
+            [false, "", "", "", ""], // tube 1
+            [false, "", "", "", ""],
+            [false, "", "", "", ""],
+            [false, "", "", "", ""],
+            [false, "", "", "", ""],
+            [false, "", "", "", ""],
+            [false, "", "", "", ""],
+            [false, "", "", "", ""]  // tube 8
+        ];
+        for (var j of TUBEList) {
+            for (var k of DYEList) {
+                var cb = document.getElementById('t'+j+'d'+k);
+                tds[j][k] = cb ? cb.checked : false;
+            };
+        };
+        return tds;
+    };
+
+    function isLocked(lts) {
+        for (let l in lts) {
+            if (lts[l]) {
+                return true;
+            };
+        };
+        return false;
+    };
+
+    var tds = tubesAndDyes();
+    var ts = tubeStates("t");
+    var lts = tubeStates("lt");
+
+    // if legend says this is visible and tube is visible, show, else hide
+    function visibles(d) {
+//        function isTrue(check) { return check; };
+        const locked = isLocked(lts);
+        return tds[tubes(d)][dyes(d)] &&
+            ( ts[tubes(d)] || ( !locked && tubes(d)==lastHovered ));
+    };
+    function visiblesD(d) {
+        return visibles(d) ? d : undefined;
+    };
+
+    function visTimes(d) {
+        return visibles(d) ? xValue(d) : undefined;
+    };
+    function visSignals(d) {
+        return visibles(d) ? signals(d) : undefined;
+    };
+
+    function rescaleGraphForce() {
+        tds = tubesAndDyes();
+        ts = tubeStates("t");
+        lts = tubeStates("lt");
+        var new_xScale = d3.scaleLinear().range([0, width]);
+        var new_yScale = d3.scaleLinear().range([height, 0]);
+        if (!autoRescale) {
+            new_xScale.domain([ d3.min(q, xValue), 1 + d3.max(q, xValue)]);
+            new_yScale.domain([ d3.min(q, signals) - 50, 50 + d3.max(q, signals)]);
+        } else {
+            new_xScale.domain([ d3.min(q, visTimes), 1 + d3.max(q, visTimes)]);
+            new_yScale.domain([ d3.min(q, visSignals) - 50, 50 + d3.max(q, visSignals)]);
+        };
+        if (!isNaN(new_xScale.domain()[0]) && isFinite(new_xScale.domain()[0]) &&
+            !isNaN(new_xScale.domain()[1]) && isFinite(new_xScale.domain()[1])) {
+            xScale.domain([0,new_xScale.domain()[1]]);
+        };
+        if (!isNaN(new_yScale.domain()[0]) && isFinite(new_yScale.domain()[0]) &&
+            !isNaN(new_yScale.domain()[1]) && isFinite(new_yScale.domain()[1])) {
+            if (new_yScale.domain()[0] < 0) {
+                yScale.domain([0, new_yScale.domain()[1]]);
+            } else {
+                yScale = new_yScale;
+            };
+        };
+        xScale.domain([0, xScale.domain()[1] > 1+testDuration ? xScale.domain()[1] : 1+testDuration ]);
+        refresh();
+        zoomed = false;
+    };
+    function rescaleGraph() {
+        if (autoRescale) {
+            rescaleGraphForce();
+        } else {
+            refresh();
+        };
+    };
+
+    function buildLegend( dyeMap, dyeNames ) {
+        var l = 1;
+        var output = document.getElementById("output");
+        if( output ) {
+            var outputHTML = output.innerHTML;
+        };
+        d3.select("#legend").selectAll("*").remove();
+
+        const isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+        const isWebkit = 'WebkitAppearance' in document.documentElement.style;
+        const isFirefox = typeof InstallTrigger !== 'undefined';
+        const isChrome = !!window.chrome && !isOpera;
+        if (isWebkit) {
+            d3.select("#legend")
+                .style("width", legendHidden ? '20px' : '-webkit-fit-content' );
+        } else if (isFirefox) {
+            d3.select("#legend")
+                .style("width", legendHidden ? '20px' : '-moz-fit-content' );
+        } else if (isChrome) {
+            d3.select("#legend")
+                .style("width", legendHidden ? '20px' : 'fit-content' );
+        } else {
+            d3.select("#legend")
+                .style("width", legendHidden ? '20px' : '180px' );
+        };
+
+        d3.select("#legend")
+          .append("span")
+            .attr("id","butterfly")
+            .on("dblclick", doURLRefresh )
+            .on("click", legendShowHide )
+          .append("img")
+            .attr("src",butterfly)
+            .attr("width", butterflyDim[0] )
+            .attr("height", butterflyDim[1] );
+        d3.select("#legend")
+          .append("span")
+            .attr("id", "output");
+        if (output) {
+            d3.select("#output").html(outputHTML);
+        };
+        d3.select("#legend")
+          .append("div")
+            .attr("id", "scroll" );
+        dyeMap.each( function( v, k ) {
+            d3.select("#scroll")
+              .append("div")
+                .style( "display", legendHidden ? "none" : "block" )
+              .append("label")
+                .classed("cb-container noselect", true )
+                .classed("dot"+v, true )
+              .html( k.substring(1) + "<span class=checkmark></span>")
+              .insert("input","span")
+                .attr("id", "l"+l )
+                .attr("name", "d" )
+                .attr("value", k )
+                .attr("type", "checkbox" )
+                .property("checked", dyeState( k, dyeNames ));
+
+            l++;
+        });
+
+        if( !legendHidden ) {
+            legendWidth = d3.select("#legend").style('width');
+        };
+
+        // dragging of legend by butterfly handle
+        d3.mouse.absolute = function() {
+            var htmlNode = d3.select('html').node();
+            var a = this(htmlNode);
+            return a;
+        };
+        var div = d3.select("#butterfly").call(
+            d3.drag()
+                .on('start.interrupt', function () {
+                    div.interrupt();
+                })
+                .on('drag start', function() {
+                    var absMouse = d3.mouse.absolute();
+                    d3.select("#legend")
+                        .style('left', constrainLegend( absMouse[0]-butterflyDim[0]/2, true ) + 'px' )
+                        .style('top', constrainLegend( absMouse[1]-butterflyDim[1]/2, false ) + 'px' );
+                })
+        );
+
+        // clicks on master legend
+        d3.selectAll("[name=d]")
+            .on("change", function() {
+                var selected = this.value;
+                var display = this.checked ? "inline" : "none";
+                ts = tubeStates("t");
+                lts = tubeStates("lt");
+                var locked = isLocked(lts);
+
+                // ensure all identically named checkbuttons share same state as this
+                var cb = "";
+                for (var j of TUBEList) {
+                    for (var k of DYEList) {
+                        if (dyeNames[j][k] == selected) {
+                            cb = document.getElementById('t'+j+'d'+k);
+                            if (cb) {
+                                cb.checked = this.checked;
+                            };
+                        };
+                    };
+                };
+                // refilter the graph to the new state
+                /* if( isMobile ) */ {
+                    tds = tubesAndDyes();
+
+                    mlinesEnter.selectAll(".line").attr("display", "none");
+                    if (!locked && (d => tubes(d)==lastHovered))
+                    {
+                        let j = lastHovered;
+                        for (let k of DYEList) {
+                            if (tds[j][k]) {
+                                mlinesEnter.select('#t'+j+'c'+k).attr("display", "inline" );
+                            };
+                        };
+                    } else if (locked) {
+                        for (let j of TUBEList) {
+                            for (let k of DYEList) {
+                                mlinesEnter.select('#t'+j+'c'+k)
+                                    .attr("display", lts[j] && tds[j][k] ? "inline" : "none" );
+                            };
+                        };
+                    };
+                /* } else { */
+                    tds = tubesAndDyes();
+
+                    flinesEnter.selectAll(".line").attr("display", "none");
+                    if (f && showFit) { // FIT
+                        if (!locked && (d => tubes(d)==lastHovered))
+                        {
+                            let j = lastHovered;
+                            for (let k of DYEList) {
+                                if (tds[j][k]) {
+                                    flinesEnter.select('#ft'+j+'c'+k).attr("display", "inline" );
+                                    mlinesEnter.select('#mft'+j+'c'+k).attr("display", "inline" );
+                                };
+                            };
+                        } else if (locked) {
+                            for (let j of TUBEList) {
+                                for (let k of DYEList) {
+                                    flinesEnter.select('#ft'+j+'c'+k)
+                                        .attr("display", lts[j] && tds[j][k] ? "inline" : "none" );
+                                    mlinesEnter.select('#mft'+j+'c'+k)
+                                        .attr("display", lts[j] && tds[j][k] ? "inline" : "none" );
+                                };
+                            };
+                        };
+                    };
+                    dotsEnter.filter( d => ( ts[tubes(d)] ||
+                                             (!locked && tubes(d)==lastHovered)
+                                           ) && selected == dyes(d)+names(d) )
+                        .attr("display", display);
+                };
+                rescaleGraph();
+                setDyeCookies();
+            });
+
+//        setDyeCookies();
+    }; // buildLegend()
+
+    function handleMouse(d, index, over) {
+        // index is tube number (zero-based index of li in navbar)
+        var j, k;
+        var tube = index - 1;
+        if (tube < 1) {
+            return;
+        };
+        if (tube > (samples ? samples.length : 8)) {
+            return;
+        };
+
+        // ensure all identically named checkbuttons share same state as this
+        // still needed for Web Archive/notLive true for legend initial state
+        var cb, cb2;
+        for (let j of TUBEList) {
+            if (j != tube) {
+                for (let k of DYEList) {
+                    if (dyenames[j][k] == dyenames[tube][k]) {
+                        cb = document.getElementById('t'+j+'d'+k);
+                        cb2= document.getElementById('t'+tube+'d'+k);
+                        if( cb && cb2 ) {
+                            cb.checked = cb2.checked;
+                        };
+                    };
+                };
+            };
+        };
+        d3.selectAll("[name=d]").each( function() {
+            var l = d3.select(this);
+            for (j of TUBEList) {
+                for (var k of DYEList) {
+                    if (dyenames[j][k] == l.property("value")) {
+                        cb = document.getElementById('t'+j+'d'+k);
+                        if( cb ) {
+                            this.checked = cb.checked;
+                        };
+                    };
+                };
+            };
+        });
+
+        // clear sticky tooltip on tube hover
+        //clearSticky();
+
+        tds = tubesAndDyes();
+        ts = tubeStates("t");
+        lts = tubeStates("lt");
+
+        // gather all the dye names for all visible tubes
+        dyemap = d3.map();
+        dotsEnter.filter( d => ts[tubes(d)])
+            .each(function(d) {
+                dyemap.set(dyes(d)+names(d),dyes(d));
+            });
+        if (!isLocked(ts)) {
+            dotsEnter.filter(d => lastHovered == tubes(d))
+                .each(function(d) {
+                    dyemap.set(dyes(d)+names(d),dyes(d));
+                });
+        };
+
+        buildLegend( dyemap, dyenames );
+
+        /* if (isMobile) { */
+            mlinesEnter.selectAll(".line")
+                .attr("display", "none" );
+        /* } else */ if (f) {
+            // FIT
+            flinesEnter.selectAll(".line")
+                .attr("display", "none" );
+        };
+        dotsEnter
+            .attr("display", d => visibles(d) ? "inline" : "none" );
+
+        /* if (!isMobile) */ {
+            if (f && showFit) { // FIT
+                if (over) {
+                    for (let t of TUBEList) {
+                        for (let c of DYEList) {
+                            if (noGrey && t != tube) {
+                                flinesEnter.select('#ft'+t+'c'+c)
+                                    .classed( "hover", t == tube )
+                                    .classed( "nohover", false )
+                                    .attr("display", ts[t] && tds[t][c] ? 'inline' : 'none' );
+                                mlinesEnter.select('#mft'+t+'c'+c)
+                                    .classed( "hover", t == tube )
+                                    .classed( "nohover", false )
+                                    .attr("display", ts[t] && tds[t][c] ? 'inline' : 'none' );
+                            } else {
+                                flinesEnter.select('#ft'+t+'c'+c)
+                                    .classed( "hover", t == tube )
+                                    .classed( "nohover", t != tube && lts[tube] )
+                                    .attr("display", ts[t] && tds[t][c] ? 'inline' : 'none' );
+                                mlinesEnter.select('#mft'+t+'c'+c)
+                                    .classed( "hover", t == tube )
+                                    .classed( "nohover", t != tube && lts[tube] )
+                                    .attr("display", ts[t] && tds[t][c] ? 'inline' : 'none' );
+                            };
+                        };
+                    };
+                } else if (!isLocked(ts)) {
+                    for (let c of DYEList) {
+                        flinesEnter.select('#ft'+lastHovered+'c'+c)
+                            .classed( "hover", true )
+                            .classed( "nohover", false )
+                            .attr("display", 'inline' );
+                        mlinesEnter.select('#mft'+lastHovered+'c'+c)
+                            .classed( "hover", true )
+                            .classed( "nohover", false )
+                            .attr("display", 'inline' );
+                    };
+                } else {
+                    for( tube of TUBEList ) {
+                        for (let c of DYEList ) {
+                            flinesEnter.select('#ft'+tube+'c'+c)
+                                .classed( "hover", false )
+                                .classed( "nohover", false )
+                                .attr("display", ts[tube] && tds[tube][c] ? 'inline' : 'none' );
+                            mlinesEnter.select('#mft'+tube+'c'+c)
+                                .classed( "hover", false )
+                                .classed( "nohover", false )
+                                .attr("display", ts[tube] && tds[tube][c] ? 'inline' : 'none' );
+                        };
+                    };
+                };
+            };
+            flinesEnter.selectAll(".line.hover").raise();
+
+            if (noGrey && over) {
+                dotsEnter
+                    .classed("nohover", false)
+                    .classed("hover", !over);
+            } else {
+                dotsEnter
+                    .classed("nohover", over && lts[tube])
+                    .classed("hover", !over);
+            };
+            circles.attr("r", 8);
+
+            if (over) {
+                dotsEnter.filter( d => tube == tubes(d) )
+                    .classed("nohover", false)
+                    .classed("hover", true);
+                circles.filter( d => tube == tubes(d) )
+                    .attr("r", 10 );
+            } else if (!isLocked(ts)) {
+                dotsEnter.filter( d => lastHovered == tubes(d) )
+                    .classed("nohover", false)
+                    .classed("hover", true);
+                circles.filter( d => lastHovered == tubes(d) )
+                    .attr("r", 10 );
+            };
+            d3.selectAll(".dot.hover").raise();
+        }/* else */{ // isMobile
+            if (over) {
+                for (let t of TUBEList) {
+                    for (let c of DYEList) {
+                        if (noGrey && t != tube) {
+                            mlinesEnter.select('#t'+t+'c'+c)
+                                .classed( "hover", t == tube )
+                                .classed( "nohover", false )
+                                .attr("display", ts[t] && tds[t][c] ? 'inline' : 'none' );
+                        } else {
+                            mlinesEnter.select('#t'+t+'c'+c)
+                                .classed( "hover", t == tube )
+                                .classed( "nohover", t != tube && lts[tube] )
+                                .attr("display", ts[t] && tds[t][c] ? 'inline' : 'none' );
+                        };
+                    };
+                };
+                mlinesEnter.selectAll(".hover").raise();
+            } else if (!isLocked(ts)) {
+                for (let c of DYEList) {
+                    mlinesEnter.select('#t'+lastHovered+'c'+c)
+                        .classed( "hover", true )
+                        .classed( "nohover", false )
+                        .attr("display", 'inline' );
+                };
+            } else {
+                for( tube of TUBEList ) {
+                    for (let c of DYEList ) {
+                        mlinesEnter.select('#t'+tube+'c'+c)
+                            .classed( "hover", false )
+                            .classed( "nohover", false )
+                            .attr("display", ts[tube] && tds[tube][c] ? 'inline' : 'none' );
+                    };
+                };
+            };
+        };
+        rescaleGraph();
+    }; // handleMouse()
+
+    function handleMouseOver(d, index) {
+        var j = index - 1; // j == lastHovered
+        if (j == 0) {
+            handleMouse(d, index, true );
+        };
+        if (j < 1) {
+            return;
+        };
+        if (firstHovered > 0 && isHovered) {
+            const first = document.getElementById("t"+firstHovered);
+            if (first) {
+                document.getElementById("t"+firstHovered).checked = true;
+                firstHovered = 0;
+            };
+        };
+        if (menuWithFocus) {
+            if (document.getElementById('d'+j)) {
+                menuWithFocus.blur();
+                menuWithFocus = document.getElementById('d'+j);
+                menuWithFocus.focus();
+            };
+            firstHovered = 0;
+        };
+        isHovered = true;
+        handleMouse(d, index, true );
+    };
+
+    function handleMouseOut(d, index) {
+        if (menuWithFocus) {
+            menuWithFocus.blur();
+            menuWithFocus = document.getElementById('d'+(index-1));
+        };
+        for (var j of TUBEList) {
+            let cb2 = document.getElementById("lt"+j);
+            if (!cb2) {
+                break;
+            };
+            if (cb2.checked) {
+                handleMouse(d, index, false);
+                break;
+            };
+        };
+        isHovered = false;
+    };
+//    }); // d3.csv
+};
+
+function dyeStates( dyeNames ) {
+    var j = 1;
+        for (var k of DYEList) {
+                var cb = document.getElementById('t'+j+'d'+k);
+                if (cb) {
+                    console.log("dyeNames["+j+"]["+k+"] "+ cb.checked);
+                };
+        };
+};
+
+function dyeState( name, dyeNames ) {
+    for (var j of TUBEList) {
+        for (var k of DYEList) {
+            if (dyeNames[j][k] == name) {
+                var cb = document.getElementById('t'+j+'d'+k);
+                if (cb) {
+                    return cb.checked;
+                };
+            };
+        };
+    };
+    return false;
+};
+
+function uncheckDye( dyeQuery, dyeNames ){
+    for (var j of TUBEList) {
+        for (var k of DYEList) {
+            var cb = document.getElementById('t'+j+'d'+k);
+            if (cb) {
+                if (dyeQuery[dyeNames[j][k]] == '0') {
+                    cb.checked = false;
+		} else {
+                    cb.checked = true;
+                };
+            };
+        };
+    };
+};
+
+function fetchHeader(url, wch) {
+    try {
+        var req=new XMLHttpRequest();
+        req.open("HEAD", url, false);
+        req.send(null);
+        if (req.status== 200) {
+            return req.getResponseHeader(wch);
+        };
+        return false;
+    } catch(er) {
+        return er.message;
+    };
+};
+
+function setDyeCookies() {
+    dyemap.each( function( v, k ) {
+        if (!dyeState( k, dyenames )) {
+            setCookie("d"+k, "0");
+	} else {
+            clearCookie("d"+k);
+        };
+    });
+};
+
+function setCookies() { // could also be used to generate a bookmark link
+    setTubeCookie();
+    setDyeCookies();
+
+    var legendX = d3.select("#legend").style('left');
+    var legendY = d3.select("#legend").style('top');
+    setCookie("x", legendX);
+    setCookie("y", legendY);
+
+    setCookie("l", legendHidden ? "0" : "1");
+    if (lastHovered != 1) {
+        setCookie("h", lastHovered);
+    } else {
+        clearCookie("h");
+    };
+    setCookie("i", isHovered ? "1" : "0");
+    setCookie("a", dur);
+    setCookie("s", yAxisSide);
+    setCookie("r", autoRescale ? "1" : "0");
+    setCookie("m", (isMobile ? "1" : "0"));
+    setCookie("g", noGrey ? "1" : "0");
+    setCookie("p", noScore ? "1" : "0");
+    setCookie("f", showFit ? "1" : "0");
+};
+
+function calcTubeHex() {
+    var bits = "";
+    // tube 8 is most significant bit, tube 1 least significant bit
+    var list = TUBEList;
+    for (var i of list) {
+        var lt = document.getElementById("lt"+i);
+        bits = (lt ? (lt.checked ? '1' : '0') : '0') + bits;
+    };
+    var hex = parseInt(bits,2).toString(16);
+    return hex;
+};
+
+function buildURL() { // could also be used to generate a bookmark link
+    var url = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    var params = "";
+
+    const hex = calcTubeHex();
+    if (hex != '0')
+    {
+        params += "&t=" + hex;
+    };
+
+    dyemap.each( function( v, k ) {
+        if (!dyeState( k, dyenames )) {
+            params += "&d" + k + "=0";
+        };
+    });
+
+    var legendX = d3.select("#legend").style('left');
+    var legendY = d3.select("#legend").style('top');
+    params += "&x=" + legendX + "&y=" + legendY;
+
+    if (legendHidden) {
+        params += "&l=0";
+    };
+
+    if (lastHovered != 1) {
+        params += "&h="+lastHovered;
+    };
+
+    if (!isHovered) {
+        params += "&i=0";
+    };
+
+    if (dur != DefaultDUR) {
+        params += "&a="+dur;
+    };
+
+    if (yAxisSide != "left") {
+        params += "&s="+yAxisSide;
+    };
+
+    if (autoRescale) {
+        params += "&r=1";
+    };
+
+    if (isMobile != ("ontouchstart" in document)) {
+        params += "&m=" + (isMobile ? "1" : "0");
+    };
+
+    if (!noGrey) {
+        params += "&g=0";
+    };
+
+    if (!noScore) {
+        params += "&p=0";
+    };
+
+    if (showFit) { // FIT
+        params += "&f=1";
+    };
+
+    if (params != "") {
+        url += "?" + params.substring(1);
+    };
+
+    return url + '&'; // extra ampersand for python server bug
+};
+
+function doURLRefresh() {
+    window.location.replace( buildURL() );
+};
+
+function doRefresh() {
+    window.location.reload();
+};
+
+function swipedetect(el, callback){
+// attribution: http://www.javascriptkit.com/javatutors/touchevents2.shtml
+    var touchsurface = el,
+        swipedir,
+        startX, startY,
+        distX, distY,
+        threshold = 150, //required min distance traveled to be considered swipe
+        restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+        twotouch = false,
+        moretouch = false,
+        handleswipe = callback || function(swipedir) {};
+    touchsurface.addEventListener(
+        'touchstart',
+        function(e) {
+            twotouch = false;
+            moretouch = false;
+            const touchobj = e.changedTouches[0];
+            swipedir = 'none';
+            startX = touchobj.pageX;
+            startY = touchobj.pageY;
+            e.preventDefault();
+        },
+        false
+    );
+    touchsurface.addEventListener(
+        'touchmove',
+        function(e) {
+            if (e.touches.length == 2) {
+                twotouch = true;
+            } else if (e.touches.length > 2) {
+                moretouch = true;
+            };
+            e.preventDefault(); // prevent scrolling when inside DIV
+        },
+        false
+    );
+    touchsurface.addEventListener(
+        'touchend',
+        function(e) {
+            if (!twotouch || moretouch) {
+                return;
+            };
+            twotouch = false;
+            const touchobj = e.changedTouches[0];
+            distX = touchobj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
+            distY = touchobj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
+            if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint) {
+                // condition for horizontal swipe met
+                swipedir = distX < 0 ? 'left' : 'right'; // if dist traveled is negative, it indicates left swipe
+            } else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) {
+                // condition for vertical swipe met
+                swipedir = distY < 0 ? 'up' : 'down'; // if dist traveled is negative, it indicates up swipe
+            };
+            handleswipe(swipedir);
+            e.preventDefault();
+        },
+        false
+    );
+};
+
+function outputData(data) {
+    const el = document.getElementById("output");
+    if (el) {
+        el.innerHTML = data;
+    } else {
+        alert(data);
+    };
+};
+
+</script>
+  <script>d3chart();</script>
+</body></html>
+

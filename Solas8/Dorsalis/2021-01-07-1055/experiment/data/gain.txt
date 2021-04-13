@@ -1,0 +1,39 @@
+[Tube 1]
+sampleID=DTWP_Male_1_KF_1
+Wild Fly=484
+GSS Female=1967
+
+[Tube 2]
+sampleID=DTWP_Male_1_KF_2
+Wild Fly=326
+GSS Female=1693
+
+[Tube 3]
+sampleID=DTWP_Male_1_KF_3
+Wild Fly=147
+GSS Female=489
+
+[Tube 4]
+sampleID=DTWP_Male_1_KF_4
+Wild Fly=455
+GSS Female=2072
+
+[Tube 5]
+sampleID=DTWP_Male_1_KF_5
+Wild Fly=340
+GSS Female=1976
+
+[Tube 6]
+sampleID=DTWP_Male_1_KF_6
+Wild Fly=451
+GSS Female=2230
+
+[Tube 7]
+sampleID=DTWP_Male_1_KF_7
+Wild Fly=646
+GSS Female=2146
+
+[Tube 8]
+sampleID=DTWP_Male_1_KF_8
+Wild Fly=557
+GSS Female=2104
